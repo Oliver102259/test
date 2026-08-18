@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NUS 311 导师助手 · 学业看板与重庆旅行指南</title>
+<style>
+:root{
+  --blue:#003D7C; --blue-2:#0b5cad; --orange:#EF7C00; --orange-2:#ff9a3d;
+  --bg:#f4f6f9; --card:#ffffff; --line:#e3e8ef; --text:#1f2937; --muted:#6b7280;
+  --green:#0e9f6e;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.6;}
+a{color:var(--blue-2);}
+
+/* ===== 头部 ===== */
+header{background:linear-gradient(120deg,var(--blue) 0%,var(--blue-2) 60%,#1269c4 100%);
+  color:#fff; padding:28px 20px 22px;}
+header .wrap{max-width:1020px; margin:0 auto;}
+header h1{font-size:26px; letter-spacing:.5px;}
+header .sub{margin-top:6px; opacity:.9; font-size:14px;}
+.pills{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;}
+.pill{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35);
+  border-radius:999px; padding:6px 14px; font-size:13.5px;}
+.pill b{color:var(--orange-2); font-size:15px;}
+
+/* ===== 导航 ===== */
+nav{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line);}
+nav .wrap{max-width:1020px; margin:0 auto; display:flex; overflow-x:auto;}
+.tab-btn{flex:0 0 auto; padding:14px 20px; font-size:15px; background:none; border:none;
+  border-bottom:3px solid transparent; cursor:pointer; color:var(--muted);}
+.tab-btn.active{color:var(--blue); border-bottom-color:var(--orange); font-weight:700;}
+
+/* ===== 主体 ===== */
+main{max-width:1020px; margin:22px auto 60px; padding:0 16px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block; animation:fade .25s ease;}
+@keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+
+h2.sec{font-size:19px; margin:26px 0 12px; padding-left:10px; border-left:4px solid var(--orange);}
+.card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:18px 20px; margin-bottom:16px; box-shadow:0 1px 3px rgba(16,42,84,.05);}
+.card h3{font-size:16px; margin-bottom:10px; color:var(--blue);}
+.card h4{font-size:14.5px; margin:12px 0 6px; color:var(--text);}
+
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px;}
+.stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+.stat .k{font-size:12.5px; color:var(--muted);}
+.stat .v{font-size:20px; font-weight:800; color:var(--blue); margin-top:4px;}
+.stat .d{font-size:12.5px; color:var(--muted); margin-top:2px;}
+.stat.hl{border-top:3px solid var(--orange);}
+
+ul.plain{list-style:none;}
+ul.plain li{padding:6px 0 6px 22px; position:relative; border-bottom:1px dashed var(--line); font-size:14.5px;}
+ul.plain li:last-child{border-bottom:none;}
+ul.plain li::before{content:"▸"; position:absolute; left:4px; color:var(--orange);}
+ul.dot{list-style:none; font-size:14.5px;}
+ul.dot li{padding:5px 0 5px 20px; position:relative;}
+ul.dot li::before{content:"•"; position:absolute; left:6px; color:var(--blue-2);}
+
+/* 任务清单 */
+.task-group{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:16px 20px; margin-bottom:14px;}
+.task-group h3{font-size:15.5px; color:var(--blue); display:flex; justify-content:space-between; align-items:center; gap:10px;}
+.task-group .head-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
+.bar{width:90px; height:8px; background:#e7edf5; border-radius:99px; overflow:hidden;}
+.bar .fill{height:100%; width:0; background:linear-gradient(90deg,var(--orange),var(--orange-2));
+  border-radius:99px; transition:width .3s;}
+.pct{font-size:12.5px; color:var(--muted); font-weight:400;}
+label.task{display:flex; align-items:flex-start; gap:10px; padding:7px 2px; font-size:14.5px; cursor:pointer;}
+label.task input{margin-top:4px; width:16px; height:16px; accent-color:var(--orange); flex:0 0 auto;}
+label.task.done{color:var(--muted); text-decoration:line-through;}
+
+/* 表格 */
+.table-scroll{overflow-x:auto;}
+table{width:100%; border-collapse:collapse; font-size:13.5px; background:#fff;}
+th{background:#eef3fa; color:var(--blue); text-align:left; padding:8px 10px; border:1px solid var(--line); white-space:nowrap;}
+td{padding:8px 10px; border:1px solid var(--line); vertical-align:top;}
+tr:nth-child(even) td{background:#fafcff;}
+
+/* 行程日卡片 */
+.day-card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  margin-bottom:18px; overflow:hidden;}
+.day-head{display:flex; align-items:center; gap:12px; padding:14px 20px; color:#fff;
+  background:linear-gradient(120deg,var(--blue) 0%,var(--blue-2) 100%);}
+.day-head .badge{background:var(--orange); border-radius:10px; padding:6px 10px;
+  font-weight:800; font-size:14px; white-space:nowrap;}
+.day-head .t{font-size:16px; font-weight:700;}
+.day-head .s{font-size:12.5px; opacity:.85;}
+.day-body{padding:16px 18px;}
+
+/* 时间线 */
+.timeline{list-style:none; padding-left:18px; border-left:3px solid #d8e4f2;}
+.timeline li{padding:7px 0 7px 14px; position:relative; font-size:14.5px;}
+.timeline li::before{content:""; position:absolute; left:-9px; top:13px; width:12px; height:12px;
+  background:var(--orange); border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 2px var(--orange);}
+.timeline li b{color:var(--blue);}
+
+.tag{display:inline-block; background:#eef3fa; color:var(--blue); border-radius:6px;
+  padding:2px 8px; font-size:12px; margin:2px 4px 2px 0;}
+.tag.warn{background:#fff3e6; color:#c25700;}
+.tag.ok{background:#e8f7f0; color:var(--green);}
+
+.note{background:#fff8ee; border:1px solid #ffe3bd; border-radius:10px; padding:12px 14px;
+  font-size:14px; margin:10px 0; color:#7a4a12;}
+.email-box{background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+  font-family:Consolas,"Courier New",monospace; font-size:13px; line-height:1.75; white-space:pre-wrap;
+  word-break:break-word; color:#2b3440; margin:10px 0;}
+.tip{background:#eef7ff; border:1px solid #cfe6ff; border-radius:10px; padding:12px 14px;
+  font-size:14px; margin:10px 0; color:#0b4d8c;}
+
+.btn{display:inline-block; background:var(--orange); color:#fff; border:none; border-radius:10px;
+  padding:9px 18px; font-size:14px; cursor:pointer; font-family:inherit;}
+.btn:hover{background:#d96d00;}
+
+footer{max-width:1020px; margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:12.5px;}
+footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
+
+@media print{
+  header, nav, footer, .no-print{display:none !important;}
+  body{background:#fff;}
+  .tab-panel{display:block !important; margin-bottom:24px;}
+  .card,.day-card,.task-group{box-shadow:none; break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>🎓 NUS 311 导师助手</h1>
+    <div class="sub">华东理工大学 · 新能源材料与器件 → NUS MSE（大四衔接课程 @ NUSRI-CQ）｜学业看板 + 重庆旅行指南</div>
+    <div class="pills">
+      <span class="pill">✈ HO1247 · 江北T3 · 8/25 18:50 落地 — <b id="cd-trip">…</b></span>
+      <span class="pill">🏫 NUSRI-CQ 报到 8/28 — <b id="cd-report">…</b></span>
+      <span class="pill">🗓 下次沟通：8/23（周日）出行前复盘</span>
+    </div>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <button class="tab-btn active" data-tab="overview">总览</button>
+  <button class="tab-btn" data-tab="study">学业看板</button>
+  <button class="tab-btn" data-tab="trip">重庆三日游</button>
+  <button class="tab-btn" data-tab="review">周复盘</button>
+  <button class="tab-btn" data-tab="amm">AMM 调研</button>
+  <button class="tab-btn" data-tab="fyp">毕设专项</button>
+  <button class="tab-btn" data-tab="email">自荐邮件</button>
+</div></nav>
+
+<main>
+
+<!-- ================= 总览 ================= -->
+<section class="tab-panel active" id="tab-overview">
+  <div class="grid">
+    <div class="stat hl"><div class="k">前五学期均分</div><div class="v">84.98</div><div class="d">要求 ≥75 ✅ 已达标</div></div>
+    <div class="stat"><div class="k">雅思</div><div class="v">7.0</div><div class="d">阅读 9.0（满分）· 口语 5.5</div></div>
+    <div class="stat"><div class="k">日语</div><div class="v">JLPT N2</div><div class="d">阅读满分</div></div>
+    <div class="stat"><div class="k">目标方向</div><div class="v" style="font-size:16px">NUS MSE · AME</div><div class="d">能源与可持续先进材料</div></div>
+  </div>
+
+  <h2 class="sec">我的职责（助理导师）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>学业监督与指导</b>：跟进课程进度与作业；全英文环境学习节奏；英文学术写作辅导；期中/期末复习计划与查漏补缺。</li>
+      <li><b>短板突破</b>：有机化学、固体物理专项计划——可视化资源（分子动画、晶体 3D 模型）优先，配合习题巩固。</li>
+      <li><b>毕业设计指导</b>：选题规划（储能/光伏/催化，对口新能源材料与器件）＋进度管理＋质量把控。</li>
+      <li><b>实习与职业发展</b>：实习信息搜集、简历与求职信优化、英文模拟面试（口语 5.5 重点加强）。</li>
+      <li><b>发挥你的阅读优势</b>：推荐高质量英文文献与教材；写作训练走"先大量读范文 → 再输出"路线。</li>
+      <li><b>沟通机制</b>：每周日复盘一次；期中/期末/毕设/申请节点加密；紧急随时。记录维护在《周复盘记录.md》。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">当前重点 · 出行前待办</h2>
+  <div class="task-group" data-group="pre">
+    <h3>🎒 行前清单（8/24 前）<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="pre-1">证件 + 报到材料（<b>随身携带，勿托运</b>）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="pre-2">防晒霜、遮阳帽、墨镜、便携小风扇、藿香正气水</label>
+    <label class="task"><input type="checkbox" class="task" data-id="pre-3">两双舒适运动鞋（暴雨可能湿鞋）、薄外套（室内空调猛）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="pre-4">雨伞（雷阵雨常见）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="pre-5">充电宝；微信/支付宝开通「重庆轨道交通乘车码」</label>
+    <label class="task"><input type="checkbox" class="task" data-id="pre-6">下载高德/百度地图、大众点评、微信「长江索道」小程序</label>
+  </div>
+
+  <div class="tip">💬 <b>怎么找我</b>：所有沟通在对话中进行，档案保存在工作目录（个人学习档案.md / 周复盘记录.md / 重庆三日游详细计划.md），本页面是它们的离线可视化版本，档案更新后我会同步刷新。</div>
+</section>
+
+<!-- ================= 学业看板 ================= -->
+<section class="tab-panel" id="tab-study">
+
+  <h2 class="sec">个人档案</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:110px">本科院校</th><td>华东理工大学 · 新能源材料与器件（大三 → 大四）</td></tr>
+      <tr><th>项目</th><td>NUS 311 联合培养（MSE）：大四 NUSRI-CQ 衔接课程 → 合格后赴 NUS 本部读硕</td></tr>
+      <tr><th>成绩</th><td>均分 84.98（要求 ≥75 ✅）</td></tr>
+      <tr><th>语言</th><td>雅思 7.0（阅读 9.0 满分 · 口语 5.5）｜ JLPT N2（阅读满分，听力弱）</td></tr>
+      <tr><th>优势</th><td>阅读理解 / 信息提取 / 文献阅读（雅思、N2 阅读双满分佐证）</td></tr>
+      <tr><th>短板</th><td>有机化学、固体物理（微观过程理解较慢）｜ 英语口语与学术写作</td></tr>
+      <tr><th>对口方向</th><td>NUSRI-CQ 先进制造与材料中心（AMM）：先进储能材料、材料结构与电子结构、电荷传输、催化反应</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec">年度目标（2026.9 – 2027.6 衔接课程年）</h2>
+  <div class="card">
+    <ol class="dot" style="list-style:none">
+      <li>1️⃣ 衔接课程全部合格，核心课程（专业课 + 英语学术写作）力争 B+ 以上 → 直升 NUS 硕士</li>
+      <li>2️⃣ 雅思口语 5.5 → 6.0+；学术写作达到能独立完成毕设论文与英文报告的水平</li>
+      <li>3️⃣ 有机化学、固体物理专项补强（开学前预热 + 学期中同步跟进）</li>
+      <li>4️⃣ 毕业设计：9–10 月选题 → 12–1 月中期 → 4–5 月完成（储能 / 光伏 / 催化方向）</li>
+      <li>5️⃣ 争取加入 NUSRI-CQ AMM 中心实验室项目，积累科研经历</li>
+    </ol>
+  </div>
+
+  <h2 class="sec">首期任务（8 月底 – 9 月底）</h2>
+
+  <div class="task-group" data-group="enroll">
+    <h3>🧳 出行与报到<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="enroll-1" checked>报到时间/地点/材料/住宿确认（已自行处理 ✅）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="enroll-2" checked>报到材料随身上机（已自行处理 ✅）</label>
+  </div>
+
+  <div class="task-group" data-group="english">
+    <h3>🇬🇧 英语（每天 45–60 分钟）<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="eng-1">影子跟读 15–30 分钟/天（BBC 6 Minute English / TED）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="eng-2">每周精读 1 篇英文综述（Nature Reviews Materials 储能/光伏方向），写 150 词 summary 发我批改</label>
+    <label class="task"><input type="checkbox" class="task" data-id="eng-3">每周 1 次雅思口语模拟（Part 1–3，对话中进行，我评分 + 给替换表达）</label>
+  </div>
+
+  <div class="task-group" data-group="organic">
+    <h3>🧪 有机化学专项（可视化优先）<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="org-1">Klein《Organic Chemistry》第 1–3 章 + Khan Academy 有机化学视频课</label>
+    <label class="task"><input type="checkbox" class="task" data-id="org-2">MolView / 分子模型每天画 5 个机理箭头</label>
+    <label class="task"><input type="checkbox" class="task" data-id="org-3">每周 10 道机理题（我出题 + 批改）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="org-4">学习顺序：先建图像（电子流向动画）→ 再记机理（微观过程慢就用可视化补）</label>
+  </div>
+
+  <div class="task-group" data-group="solid">
+    <h3>💎 固体物理专项<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="sol-1">Kittel《固体物理学导论》或 黄昆《固体物理学》第 1 章（晶体结构）+ VESTA 晶体 3D 操作</label>
+    <label class="task"><input type="checkbox" class="task" data-id="sol-2">先建图像（晶格 / 倒格子 / 能带动画）再补数学推导</label>
+  </div>
+
+  <div class="task-group" data-group="fyp">
+    <h3>🎓 毕设选题（9 月启动）<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="fyp-1" checked>收集 NUSRI-CQ AMM 中心导师方向信息 —— ✅ 导师已完成初版调研，详见「AMM 调研」页</label>
+    <label class="task"><input type="checkbox" class="task" data-id="fyp-2">列出 3 个兴趣方向 → 我做选题矩阵（对口度/难度/资源/导师匹配）</label>
+  </div>
+
+  <h2 class="sec">毕设时间线</h2>
+  <div class="card">
+    <ul class="timeline">
+      <li><b>2026.9–10 选题</b>：摸清 AMM 导师方向 → 选题矩阵 → 定题</li>
+      <li><b>2026.12–2027.1 中期</b>：进度检查 + 中期汇报准备</li>
+      <li><b>2027.4–5 完成</b>：论文写作（学术写作能力在此兑现）+ 答辩</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">实习与职业发展策略</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><b>首选 · 科研经历</b>：争取加入 NUSRI-CQ AMM 实验室项目——方向对口、含金量高，对申 NUS 硕士帮助最大（大四课程紧，学期中不建议全职校外实习）。</li>
+      <li><b>次选 · 企业实习</b>：2027 年 6–8 月（衔接课程结束、赴新前）做电池/光伏/储能方向企业实习；我可以帮你建岗位信息库。</li>
+      <li><b>随时 · 申请材料与面试</b>：简历、求职信优化 + 英文模拟面试（口语重点训练）。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">英语学术写作路线（发挥你的阅读优势）</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><b>输入阶段</b>：每周精读 1 篇优质英文文献/范文 → 建立语感与语料笔记本（好句型、好表达摘录）。</li>
+      <li><b>输出阶段</b>：先写 150 词 summary → 段落仿写 → 综述式短篇 → 毕设论文。</li>
+      <li><b>批改闭环</b>：每篇发我，我逐句批改并给替换表达。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">资源链接</h2>
+  <div class="card">
+    <p>
+      <a href="https://molview.org" target="_blank" class="tag">MolView 分子模型</a>
+      <a href="https://www.khanacademy.org/science/organic-chemistry" target="_blank" class="tag">Khan Academy 有机化学</a>
+      <a href="https://jp-minerals.org/vesta/en/" target="_blank" class="tag">VESTA 晶体 3D</a>
+      <a href="http://www.nusricq.cn" target="_blank" class="tag">NUSRI-CQ 官网</a>
+    </p>
+    <p style="margin-top:8px; font-size:13px; color:var(--muted)">提示：可视化先行的原则——有机看电子流向动画，固体看晶格与能带结构 3D/动画，再回头啃教材推导。</p>
+  </div>
+</section>
+
+<!-- ================= 重庆三日游 ================= -->
+<section class="tab-panel" id="tab-trip">
+
+  <div class="tip">✈ <b>行程前提</b>：HO1247 于 8/25 18:50 落地江北机场 T3 → 当晚只安排"抵达 + 观音桥晚餐"；8/26 渝中精华；8/27 魔幻打卡 + 南岸夜景；8/28 上午轻逛后报到。8 月下旬重庆最高温常达 33–39℃，原则：<b>早晚活动、正午室内、随时补水防晒</b>。</div>
+
+  <h2 class="sec">Day 0.5｜8/25（周二）抵达 + 观音桥</h2>
+  <div class="day-card">
+    <div class="day-head"><span class="badge">DAY 0.5</span><div><div class="t">抵达 + 观音桥夜宵</div><div class="s">酒店：SFEEL 设计师酒店（观音桥九街店）</div></div></div>
+    <div class="day-body"><div class="table-scroll"><table>
+      <tr><th style="width:96px">时间</th><th style="width:190px">安排</th><th>交通 / 备注</th></tr>
+      <tr><td>18:50</td><td>HO1247 落地 CKG T3</td><td>取行李约 19:40 出到达层；当天用航旅纵横/飞常准留意航班动态</td></tr>
+      <tr><td>19:40–20:40</td><td>前往酒店</td><td><b>地铁</b>（约 55–65 分钟，≈6 元/人）：T3 到达层 → 10 号线（兰花路方向，约 9 站/25 分钟）→ 鲤鱼池 → 换 9 号线（高滩岩方向）→ 观音桥（仅 1 站），出站步行约 10 分钟到九街。<br><b>打车/网约车</b>（带行李推荐）：30–45 分钟，60–90 元</td></tr>
+      <tr><td>21:00</td><td>办理入住</td><td>放行李稍作休整</td></tr>
+      <tr><td>21:30–22:30</td><td><b>观音桥好吃街晚餐</b></td><td>酒店步行可达，营业到深夜：酸辣粉、山城小汤圆、苕皮豆干、玫瑰糍粑冰粉；或来碗"入渝第一面"</td></tr>
+      <tr><td>23:00 前</td><td>回酒店休息</td><td>明早行程较满</td></tr>
+    </table></div></div>
+  </div>
+
+  <h2 class="sec">Day 1｜8/26（周三）渝中老城 + 洪崖洞夜景</h2>
+  <div class="day-card">
+    <div class="day-head"><span class="badge">DAY 1</span><div><div class="t">解放碑 · 白象居 · 十八梯 · 山城步道 · 洪崖洞</div><div class="s">全天约 1.5–2 万步，务必穿运动鞋</div></div></div>
+    <div class="day-body"><div class="table-scroll"><table>
+      <tr><th style="width:96px">时间</th><th style="width:190px">安排</th><th>交通 / 备注</th></tr>
+      <tr><td>07:45</td><td>早餐</td><td>酒店附近小面 / 豆浆油条</td></tr>
+      <tr><td>08:30</td><td>出发</td><td>观音桥 → 3 号线 → 牛角沱 → 2 号线 → 临江门（约 30 分钟）</td></tr>
+      <tr><td>09:00–09:40</td><td>解放碑</td><td>打卡 + 逛八一路，早上人少不热</td></tr>
+      <tr><td>09:40–10:40</td><td>白象居</td><td>步行 15–20 分钟（下坡）；拍"索道穿楼 + 来福士同框"。<b>居民楼，保持安静</b>；若临时限流改去湖广会馆/东水门老街</td></tr>
+      <tr><td>11:00–12:30</td><td><b>八一好吃街午餐</b></td><td>好又来酸辣粉（总店）、山城小汤圆、军屯锅盔、冰粉；想吹空调可去得意世界/八一广场</td></tr>
+      <tr><td>12:30–14:30</td><td>十八梯</td><td>从较场口方向下梯坎；正午热，茶馆多歇</td></tr>
+      <tr><td>14:30–16:30</td><td>山城巷 / 山城步道</td><td>步行约 15 分钟；巷内咖啡馆歇脚</td></tr>
+      <tr><td>16:30–17:30</td><td>室内休整</td><td>解放碑商场吹空调、下午茶</td></tr>
+      <tr><td>17:30–19:00</td><td><b>晚餐</b></td><td>杨记隆府（江湖菜）或 珮姐老火锅（较场口店），提前取号</td></tr>
+      <tr><td>19:30–21:00</td><td>洪崖洞夜景</td><td>免费，亮灯 19:30–23:00。先 11 楼城市阳台俯瞰，再走<b>千厮门大桥</b>到对岸大剧院拍全景</td></tr>
+      <tr><td>21:00–21:45</td><td>返程</td><td>大剧院 → 6 号线 → 红旗河沟 → 3 号线 → 观音桥（约 30 分钟）；或打车约 20 分钟/25–35 元</td></tr>
+      <tr><td>22:00</td><td>到酒店</td><td>—</td></tr>
+    </table></div></div>
+  </div>
+
+  <h2 class="sec">Day 2｜8/27（周四）魔幻打卡 + 南岸江景</h2>
+  <div class="day-card">
+    <div class="day-head"><span class="badge">DAY 2</span><div><div class="t">李子坝 · 磁器口 · 鹅岭二厂 · 长江索道 · 龙门浩 · 南滨路</div><div class="s">傍晚索道排队可能 30–60 分钟，超 1 小时改打车过江</div></div></div>
+    <div class="day-body"><div class="table-scroll"><table>
+      <tr><th style="width:96px">时间</th><th style="width:190px">安排</th><th>交通 / 备注</th></tr>
+      <tr><td>08:45</td><td>出发</td><td>观音桥 → 3 号线 → 牛角沱 → 2 号线 → 李子坝（约 25 分钟）</td></tr>
+      <tr><td>09:15–10:00</td><td>李子坝观景台</td><td>B 出口对面平台拍轻轨穿楼；可坐 2 号线体验穿楼第一视角</td></tr>
+      <tr><td>10:00–11:00</td><td>前往磁器口</td><td>李子坝 → 2 号线 → 大坪 → 1 号线 → 磁器口（约 35 分钟）</td></tr>
+      <tr><td>11:00–13:30</td><td><b>磁器口 + 午餐</b></td><td>古镇鸡杂/毛血旺 + 陈昌银麻花（总店）+ 冰粉凉虾；中午热，店内多歇</td></tr>
+      <tr><td>13:30–14:15</td><td>前往鹅岭</td><td>磁器口 → 1 号线 → 鹅岭（约 25 分钟）</td></tr>
+      <tr><td>14:15–16:00</td><td>鹅岭二厂文创园</td><td>鹅岭站步行上坡 10–15 分钟（或打车起步价）；《从你的全世界路过》取景地，咖啡馆 + 天台观景避暑</td></tr>
+      <tr><td>16:00–16:30</td><td>前往索道站</td><td>鹅岭 → 1 号线 → 小什字（约 15 分钟），出站步行 5–8 分钟至新华路站</td></tr>
+      <tr><td>16:30–18:00</td><td><b>长江索道</b></td><td>微信「长江索道」小程序提前购票（单程 20 元/往返 30 元，以官方为准）；单程约 4 分钟，尽量靠窗</td></tr>
+      <tr><td>18:00–18:45</td><td>龙门浩老街</td><td>上新街出站步行约 700 米；江景机位（索道 + 东水门大桥 + 来福士同框），看日落</td></tr>
+      <tr><td>18:45–20:15</td><td><b>江景晚餐</b></td><td>龙门九号·百年洋楼江景火锅等（人均 100–150），提前订位</td></tr>
+      <tr><td>20:15–21:15</td><td>南滨路</td><td>滨江步道看渝中半岛夜景；体力好可打车 10 分钟去长嘉汇（两江交汇观景台）</td></tr>
+      <tr><td>21:15–22:00</td><td>返程</td><td>上新街 → 6 号线 → 红旗河沟 → 3 号线 → 观音桥（约 30 分钟）；或打车约 25 分钟/30–40 元</td></tr>
+    </table></div></div>
+  </div>
+
+  <h2 class="sec">Day 3｜8/28（周五）轻逛 + 报到日</h2>
+  <div class="day-card">
+    <div class="day-head"><span class="badge">DAY 3</span><div><div class="t">观音桥轻逛 + 买特产 → NUSRI-CQ 报到</div><div class="s">报到事项你已自行确认 ✅</div></div></div>
+    <div class="day-body"><div class="table-scroll"><table>
+      <tr><th style="width:96px">时间</th><th style="width:190px">安排</th><th>交通 / 备注</th></tr>
+      <tr><td>08:00–09:30</td><td>早餐 + 观音桥轻逛</td><td>北仓文创园（酒店附近）或步行街；<b>特产</b>：火锅底料（桥头/秋霞/名扬）、合川桃片、江津米花糖</td></tr>
+      <tr><td>09:30</td><td>退房</td><td>行李寄存或随行</td></tr>
+      <tr><td>10:00–11:00</td><td>前往研究院</td><td>⚠️ <b>报到地点以项目办通知为准</b>：研究院双址——办公在渝北区卉竹路 2 号互联网产业园二期 4 号楼；龙兴园区在龙兴镇两江大道 618 号（明月湖畔），距观音桥约 35 公里。<br><b>打车（推荐，带行李）</b>：45–60 分钟，90–130 元。<br>地铁备选：9 号线 → 宝圣湖 → 15 号线 → 龙骏大道 → 打车/974 路（15 号线一期原计划 2026 年 6 月底开通，出发前确认）；或 4 号线龙兴站 → 打车约 10 分钟</td></tr>
+      <tr><td>11:00 起</td><td>报到</td><td>按项目办通知办理；如院所有接驳班车可优先使用</td></tr>
+    </table></div></div>
+  </div>
+
+  <h2 class="sec">餐厅与美食推荐</h2>
+  <div class="card">
+    <table>
+      <tr><th style="width:150px">时机</th><th>推荐</th><th style="width:190px">说明</th></tr>
+      <tr><td>8/25 晚</td><td>观音桥好吃街</td><td>酸辣粉、山城小汤圆、苕皮豆干、冰粉；营业到深夜</td></tr>
+      <tr><td>8/26 午</td><td>八一好吃街</td><td>好又来酸辣粉（总店）、山城小汤圆、军屯锅盔</td></tr>
+      <tr><td>8/26 晚</td><td>杨记隆府 / 珮姐老火锅</td><td>江湖菜对不吃辣友好；火锅提前取号</td></tr>
+      <tr><td>8/27 午</td><td>磁器口古镇</td><td>古镇鸡杂、毛血旺、陈昌银麻花（总店）</td></tr>
+      <tr><td>8/27 晚</td><td>龙门九号·百年洋楼江景火锅</td><td>南滨路江景位，人均 100–150，提前订位</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec">预算参考（两人，不含酒店/机票）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th>项目</th><th>参考</th></tr>
+    <tr><td>地铁</td><td>约 15–20 元/人/天</td></tr>
+    <tr><td>长江索道</td><td>20 元/人（单程）</td></tr>
+    <tr><td>打车</td><td>全程合计约 150–250 元（含报到日）</td></tr>
+    <tr><td>餐饮</td><td>小吃餐人均 25–40 元；正餐人均 60–150 元</td></tr>
+    <tr><td><b>合计</b></td><td><b>人均约 500–700 元 / 3.5 天（宽裕）</b></td></tr>
+  </table></div></div>
+
+  <h2 class="sec">备用方案（弹性替换）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>白象居临时限流 → 湖广会馆 / 东水门老街</li>
+      <li>索道排队超 1 小时 → 打车过东水门大桥直达龙门浩</li>
+      <li>洪崖洞人爆满 → 直接去对岸大剧院视角（全景反而更好）</li>
+      <li>磁器口人挤 → 逛后街、宝轮寺，更清净</li>
+      <li>交通茶馆（黄桷坪）离主线远，报到日下午有空再考虑，否则放弃</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">实用贴士</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>🌡 <b>天气</b>：8 月下旬最高温常达 33–39℃，体感 40℃+，偶有雷阵雨——防晒 + 补水 + 藿香正气水备用。</li>
+      <li>🚇 <b>交通</b>：地铁首选，微信/支付宝乘车码；重庆的步行导航距离打个 1.5 倍折扣，别看直线距离。</li>
+      <li>👟 <b>穿搭</b>：千万别穿高跟鞋，全程运动鞋；带伞。</li>
+      <li>🚫 <b>避坑</b>：洪崖洞免费进入，别买门口高价票和"快速通道"；索道只在官方小程序购票。</li>
+      <li>🍲 <b>火锅</b>：选居民楼下的老店更地道。</li>
+    </ul>
+  </div>
+
+  <div class="no-print" style="text-align:right; margin-bottom:14px;"><button class="btn" onclick="window.print()">🖨 打印行程</button></div>
+</section>
+
+<!-- ================= 周复盘 ================= -->
+<section class="tab-panel" id="tab-review">
+  <h2 class="sec">最近记录 · 2026-08-17（周一）</h2>
+  <div class="card">
+    <h3>首次沟通：导师角色确认 + 重庆行程规划</h3>
+    <ul class="plain">
+      <li><b>完成</b>：① 确认助理导师角色与职责范围；② 制定重庆三日游详细计划（8/25 晚抵达版）；③ 航班信息 HO1247 · 江北 T3 已定稿接驳。</li>
+      <li><b>你已自行处理</b>：报到时间/地点/材料/住宿。</li>
+      <li><b>待办（出行前）</b>：乘车码、口语影子跟读、第一篇英文综述 summary → 见"总览"页清单。</li>
+    </ul>
+    <div class="note">🗓 <b>下次沟通：2026-08-23（周日）出行前复盘</b>——我会先带你过一遍未完成项，再核对行程。</div>
+  </div>
+
+  <h2 class="sec">复盘模板（每次沟通使用）</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><b>本周完成</b>：课程 / 任务 / 里程碑</li>
+      <li><b>未完成 / 困难</b>：卡点与原因（短板课、写作、口语优先说）</li>
+      <li><b>下周计划</b>：具体到天或任务</li>
+      <li><b>需要导师协助</b>：批改 / 出题 / 查资料 / 模拟面试 / 选题讨论</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">沟通机制</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>常规：<b>每周日复盘一次</b>（你发起，我更新《周复盘记录.md》）。</li>
+      <li>加密：期中/期末、毕设节点、申请节点可增至每周 2 次。</li>
+      <li>紧急：随时发起。</li>
+      <li>方式：本对话 + 工作目录档案文件（本页面为离线可视化版）。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= AMM 调研 ================= -->
+<section class="tab-panel" id="tab-amm">
+  <div class="tip">🔬 <b>调研时间：2026-08-17（初版）</b>｜数据源：NUSRI-CQ 官网 + 两江新区报道 + NUS 教师主页。开学宣讲信息你补充后我会更新本页；完整版见《NUSRI-CQ-AMM导师方向调研.md》。</div>
+
+  <h2 class="sec">中心概况</h2>
+  <div class="card">
+    <p style="font-size:14.5px">先进制造与材料中心（AMM）是 NUSRI-CQ 牵头的<b>跨学科研发中心</b>，汇集设计、制造、化学、材料和计算领域专家，目标是建设连接增材制造平台与 CNC 加工中心的<b>集成化设计与快速响应智能制造平台</b>，服务汽车、航空航天、精密工程、再制造、医疗和消费等领域的<b>高附加值零件制造</b>。</p>
+    <p style="margin-top:10px;font-size:13px;color:var(--muted)">🏢 双址：办公 渝北区卉竹路 2 号重庆互联网产业园二期 4 号楼（023-67392300）｜龙兴园区 龙兴镇两江大道 618 号（明月湖畔）。研究院另有智能传感与人工智能中心、现代物流中心、金融中心，以及<b>二维材料研究中心</b>（主任：诺沃肖洛夫）。</p>
+  </div>
+
+  <h2 class="sec">四大研究方向（官方）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>高附加值产品全生命周期（设计—制造—回收）集成化数字主线平台</li>
+      <li>混合加工工艺 CAD/CAM/数字孪生多功能工具集成平台</li>
+      <li>先进制造和材料合成中物理化学过程的高精度数值模拟</li>
+      <li>⭐ <b>基于先进制造、面向下一代固态能源系统的先进储能材料</b> <span class="tag warn">与你专业最对口</span></li>
+    </ul>
+  </div>
+
+  <h2 class="sec">与你最对口的导师（重点关注）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th>导师</th><th>角色</th><th>方向（与你专业相关）</th><th>为什么关注</th></tr>
+    <tr><td><b>王玉美</b></td><td>高级研究员 · 正高职称 · 常驻重庆 PI</td><td>锂/钠离子电池、全固态/准固态/半固态电池、高安全阻燃电池、铁电/压电/介电功能陶瓷薄膜</td><td>常驻重庆、方向最对口；<b>全球卓越工程师大赛金奖项目负责人；团队核心含常务副院长吕力教授</b>——最可能直接带毕设生</td></tr>
+    <tr><td><b>吕力</b></td><td>NUS 教授 · <b>常务副院长</b> · 首席研究员</td><td>锂/钠电池、固态电解质、全固态电池、介电材料</td><td>电池方向国际知名专家；<b>与王玉美同团队</b>，可联合指导</td></tr>
+    <tr><td><b>王庆</b></td><td>NUS 教授 · 首席研究员</td><td>介观电荷传输、氧化还原液流电池、染料敏化光电化学电池</td><td>储能机理研究；2018 NRF Investigatorship</td></tr>
+    <tr><td><b>王家功</b></td><td>NUS MSE 系主任 · NUSRI-CQ 院长 · 两院院士</td><td>可持续能源纳米材料、铁电薄膜、储能材料</td><td>连续 6 年全球高被引</td></tr>
+    <tr><td><b>诺沃肖洛夫</b></td><td>诺奖得主 · 二维材料研究中心主任</td><td>二维材料、智能适应材料（智能电池、催化）</td><td>诺奖级平台，前沿方向</td></tr>
+    <tr><td><b>毛献文</b></td><td>研究员 · NUS MSE 助理教授</td><td>光电化学与（光）催化、单分子/单离子尺度原位成像（电池失效机理）</td><td>青年 PI，原位表征硬核</td></tr>
+    <tr><td><b>吴昌盛</b></td><td>研究员 · NUS MSE</td><td>智能传感与能量器件、可穿戴/植入生物电子、能量收集</td><td>能源 + 器件 + 智能交叉</td></tr>
+    <tr><td><b>陈维香</b></td><td>高级研究员 · NUS 化学系副教授</td><td>功能性纳米材料、能量储存与光催化纳米复合材料</td><td>储能/光催化材料</td></tr>
+  </table></div></div>
+
+  <h2 class="sec">团队成员名单（22 人，按职称）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th>姓名</th><th>职称</th><th>一句话方向</th></tr>
+    <tr><td>张云峰</td><td>中心主任 · 高级研究员</td><td>MEMS/微纳制造、数字孪生智慧工厂（NUS ME 副教授）</td></tr>
+    <tr><td>王家功</td><td>首席研究员</td><td>可持续能源纳米材料、铁电薄膜、储能材料（院长、两院院士）</td></tr>
+    <tr><td>诺沃肖洛夫</td><td>首席研究员</td><td>二维材料、智能适应材料（诺奖得主）</td></tr>
+    <tr><td>吕力</td><td>首席研究员</td><td>锂/钠电池、固态电解质、全固态电池、介电材料</td></tr>
+    <tr><td>王庆</td><td>首席研究员</td><td>电荷传输、氧化还原液流电池、光电化学电池</td></tr>
+    <tr><td>陈景升</td><td>首席研究员</td><td>磁性/铁电/半导体材料与存储、逻辑器件</td></tr>
+    <tr><td>傅盈西</td><td>首席研究员</td><td>3D 打印、增材制造、生物打印、软体机器人</td></tr>
+    <tr><td>何超斌</td><td>首席研究员</td><td>高分子/纳米复合材料、二维材料</td></tr>
+    <tr><td>李俊</td><td>首席研究员</td><td>水凝胶与生物材料、智能与 3D 打印材料</td></tr>
+    <tr><td>林水德</td><td>首席研究员</td><td>机械生物学、微流控、可穿戴医疗设备</td></tr>
+    <tr><td>许国勤</td><td>首席研究员</td><td>表面科学、半导体表面修饰</td></tr>
+    <tr><td><b>王玉美</b></td><td>高级研究员</td><td>锂/钠电池、全固态/半固态电池、阻燃电池、功能陶瓷薄膜（<b>常驻重庆 · 正高 · 大赛金奖</b>）</td></tr>
+    <tr><td>陈维香</td><td>高级研究员</td><td>功能纳米材料、储能与光催化纳米复合材料</td></tr>
+    <tr><td>黄伟明</td><td>高级研究员</td><td>智能/形状记忆材料</td></tr>
+    <tr><td>卢文锋</td><td>高级研究员</td><td>数字制造、AI 与产品设计</td></tr>
+    <tr><td>王浩</td><td>高级研究员</td><td>增减材混合制造、超精密加工</td></tr>
+    <tr><td>吴杰</td><td>高级研究员</td><td>流动化学、光催化合成、自动合成</td></tr>
+    <tr><td>叶汉基</td><td>高级研究员</td><td>金属配合物与功能材料</td></tr>
+    <tr><td>张淳</td><td>高级研究员</td><td>量子计算理论、自旋器件、原子尺度催化</td></tr>
+    <tr><td>毛献文</td><td>研究员</td><td>光电化学与（光）催化、单离子尺度原位成像</td></tr>
+    <tr><td>吴昌盛</td><td>研究员</td><td>智能传感与能量器件、柔性/植入生物电子</td></tr>
+    <tr><td>张黄伟</td><td>研究员</td><td>金属增材制造/激光加工</td></tr>
+  </table></div>
+  <p style="margin-top:8px;font-size:13px;color:var(--muted)">另：仇成伟教授（NUS ECE 院长讲席教授，NUSRI-CQ 首席研究员，2025 全球高被引）研究纳米光子学与超构表面，属研究院其他团队，同样值得关注。</p>
+  </div>
+
+  <h2 class="sec">周边生态 · 联合培养博士后</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>邓容锐</b>：NUSRI-CQ 博士后（重庆大学材料学院博士 · 明月湖实验室），课题为<b>新型镁离子电池正极材料</b>。</li>
+      <li><b>宋泽宇</b>：NUSRI-CQ 联合培养博士后（重大能源与动力工程学院），方向为<b>钙钛矿太阳能电池 + 超级电容器</b>（光伏-储能结合）。</li>
+      <li>说明：NUSRI-CQ 与重庆大学（明月湖实验室）等在渝高校深度联培，毕设课题很可能嵌入这些合作网络。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">在研项目与实验室平台（调研 2026-08-17）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:190px">项目</th><th>团队</th><th>要点</th></tr>
+    <tr><td><b>高性能阻燃固态锂电池</b>（核心在研）</td><td>王玉美 + 吕力（常务副院长）+ RA 易强</td><td>阻燃凝胶固态电解质匹配高镍三元（9 系）正极；穿刺/弯折/剪切/燃烧试验不起火不爆炸；AEM 顶刊 + 3 项国家专利 + 1 项 PCT；<b>2023 全球卓越工程师大赛创新挑战赛金奖</b>、金秋路演三等奖；正推进新能源汽车/电动船/储能/消费电子产业化（<a href="http://cq.people.com.cn/n2/2025/0606/c367889-41251981.html" target="_blank">人民网 2025-06</a>｜<a href="http://nusricq.cn/news/xwjj/159.html" target="_blank">官网新闻</a>）</td></tr>
+    <tr><td><b>全固态钠电池界面与电解质</b></td><td>吕力/王玉美 + 重庆大学徐朝和等</td><td>聚合物电解质界面稳定性（Adv. Sci.）；铁电工程化界面全固态钠金属电池（Adv. Sci. 2023）；铁电修饰复合电解质（Nano-Micro Lett.）——<a href="https://wap.sciencenet.cn/blog-3411509-1453600.html" target="_blank">科学网</a></td></tr>
+    <tr><td>锂/钠离子电池材料与器件</td><td>王玉美团队</td><td>基础课题，日常带学生的主力方向</td></tr>
+    <tr><td>MEMS 用铁电/压电/介电功能陶瓷薄膜</td><td>王玉美团队（衔接王家功方向）</td><td>器件用功能薄膜</td></tr>
+  </table></div></div>
+
+  <div class="card">
+    <ul class="dot">
+      <li><b>制造平台</b>：增材制造 + CNC 加工中心集成、数字主线/数字孪生（张云峰、傅盈西、卢文锋、王浩）。</li>
+      <li><b>生物材料科研创新中心</b>（2024 与立星生物共建）：可塑形骨修复材料。</li>
+      <li><b>二维材料研究中心</b>（诺沃肖洛夫，NUSRI-CQ 内设）：二维材料、智能适应材料（智能膜、智能电池、催化）。<br>⚠️ 另注：<b>诺奖（重庆）二维材料研究院</b>是 2019 年注册的独立公司（诺沃肖洛夫任首席科学家，主打产业化），与 NUSRI-CQ 合作密切但<b>非其下属机构</b>。</li>
+      <li><b>产学研平台</b>：BLOCK71 孵化（已引入 8 家企业）+ 百名博士生培养计划（截至 2022 已录 70 人）；2026-05 主办中新（重庆）国际科技交流与创新大会。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">毕设选题初步建议（4 个候选方向）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th>候选</th><th>方向</th><th>对口导师</th><th>特点</th></tr>
+    <tr><td><b>A</b></td><td>固态/半固态电池关键材料与界面</td><td>王玉美、吕力</td><td>实验为主、最对口；王玉美常驻重庆，最可能直接带毕设生</td></tr>
+    <tr><td><b>B</b></td><td>储能体系电荷传输与失效机理</td><td>王庆、毛献文</td><td>偏机理 + 原位表征训练，含金量高</td></tr>
+    <tr><td><b>C</b></td><td>二维/功能纳米材料与能源催化</td><td>诺沃肖洛夫、陈维香、张淳</td><td>前沿、资源顶配；需确认能否直接带毕设</td></tr>
+    <tr><td><b>D</b></td><td>铁电/压电/介电功能薄膜与储能应用</td><td>王玉美、王家功</td><td>材料 + 器件，契合"电子结构"方向</td></tr>
+  </table></div></div>
+
+  <div class="task-group" data-group="amm-next">
+    <h3>🎓 开学后行动清单<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="amm-1">参加开学宣讲，记录各课题组收毕设生的名额与方式</label>
+    <label class="task"><input type="checkbox" class="task" data-id="amm-2">向王玉美团队了解 3+1+1 学生毕设流程（宣讲后当面/邮件）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="amm-3">把最感兴趣的 3 个方向告诉我 → 我做选题矩阵</label>
+    <label class="task"><input type="checkbox" class="task" data-id="amm-4">把宣讲补充信息（常驻 PI 名单、课题列表）发我 → 更新本页</label>
+  </div>
+
+  <h2 class="sec">来源链接</h2>
+  <div class="card">
+    <p>
+      <a href="https://nusricq.cn/chapter/science1/yfzx1/yzzc1/" target="_blank" class="tag">AMM 中心官网</a>
+      <a href="https://www.liangjiang.gov.cn/mixmedia/content/WS691ed321e4b01c208771317a.html" target="_blank" class="tag">2025 全球高被引报道</a>
+      <a href="https://www.thepaper.cn/newsDetail_forward_27491100" target="_blank" class="tag">王玉美人物报道</a>
+      <a href="https://cde.nus.edu.sg/mse/staff/wang-john/" target="_blank" class="tag">王家功 NUS 主页</a>
+      <a href="https://cde.nus.edu.sg/mse/staff/mao-xianwen/" target="_blank" class="tag">毛献文 NUS 主页</a>
+      <a href="https://cde.nus.edu.sg/mse/staff/changsheng-wu/" target="_blank" class="tag">吴昌盛 NUS 主页</a>
+    </p>
+  </div>
+</section>
+
+<!-- ================= 毕设专项 ================= -->
+<section class="tab-panel" id="tab-fyp">
+  <div class="tip">🎯 <b>第一志愿（待宣讲确认）：王玉美团队（吕力体系）· 高性能阻燃固态锂电池项目</b>。完整版见《毕设准备计划-阻燃固态锂电池.md》。<br>📚 Zotero 9 + 茉莉花插件已由导师装好（Windows 开始菜单启动 Zotero 即可使用）。<br>📖 <b>文献库已由导师建好</b>：打开 Zotero 即见「毕设-阻燃固态锂电池｜论文」（7 篇）与「毕设-背景资料｜网页」（8 条）两个集合。</div>
+
+  <h2 class="sec">课题定位</h2>
+  <div class="card">
+    <p style="font-size:14.5px">技术路线：<b>阻燃凝胶/准固态电解质</b> + 高镍三元（9 系）正极 → 高安全 + 高比能；核心卖点：兼容现有产线。<br>
+    团队：王玉美（常驻 PI · 正高 · 金奖项目负责人）+ 吕力（常务副院长）+ RA 易强；团队特色：铁电/介电界面修饰。<br>
+    应用：动力电池、电动船、户外储能、消费电子。</p>
+  </div>
+
+  <h2 class="sec">知识准备（按优先级）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:150px">模块</th><th style="width:290px">学什么</th><th>资源（直接打开）</th></tr>
+    <tr><td>电化学基础</td><td>电化学窗口、离子电导率、界面阻抗、过电位、库仑效率；会读 EIS 图</td><td><a href="https://www.icourse163.org/course/ZJU-1206700860" target="_blank">浙大《电化学》MOOC</a>｜<a href="https://www.khanacademy.org/science/chemistry/oxidation-reduction" target="_blank">Khan Academy 电化学</a>｜<a href="https://www.bilibili.com/video/BV1Lh41177A5/" target="_blank">B-V 方程视频（B站）</a>｜<a href="https://www.gamry.com/application-notes/EIS/basics-of-electrochemical-impedance-spectroscopy/" target="_blank">EIS 入门（Gamry）</a></td></tr>
+    <tr><td>电池基础</td><td>锂电结构、高镍 NCM 结构与热失控、锂金属枝晶、钠电差异</td><td><a href="https://ocw.mit.edu/courses/3-091-introduction-to-solid-state-chemistry-fall-2018/" target="_blank">MIT OCW 3.091</a>｜<a href="https://www.icourse163.org/course/detail.htm?cid=1450341263" target="_blank">MOOC 新能源材料基础与应用</a>｜<a href="https://www.nature.com/articles/s41560-019-0513-y" target="_blank">Nature Energy 高镍正极综述</a></td></tr>
+    <tr><td>聚合物/凝胶电解质</td><td>PEO/PAN/PVDF/PMMA 基体、离子传导机理、原位聚合、一体化电极</td><td><a href="http://www.cailiaoniu.com/?p=254159" target="_blank">AEM 2023 综述中文导读</a>｜<a href="https://doi.org/10.1002/aenm.202501236" target="_blank">AEM 2025 阻燃准固态论文</a></td></tr>
+    <tr><td>阻燃化学</td><td>磷系/卤系阻燃剂、阻燃机理、与电化学兼容性</td><td><a href="https://www.x-mol.com/paper/1743474050416218112/t" target="_blank">ESM 综述：防火聚合物电解质策略</a></td></tr>
+    <tr><td>界面科学</td><td>SEI/CEI、空间电荷层、铁电/介电界面修饰（团队特色）</td><td><a href="https://wap.sciencenet.cn/blog-3411509-1453600.html" target="_blank">NML 铁电修饰复合电解质解读</a>｜<a href="http://www.polymer.cn/sci/kjxw19398.html" target="_blank">AS 界面稳定性进展</a></td></tr>
+    <tr><td>表征与测试</td><td>XRD、SEM/EDS、EIS、DSC、TGA、针刺/燃烧/循环测试</td><td><a href="https://myscope.training/" target="_blank">MyScope 显微镜/XRD 互动教程</a>｜<a href="https://www.gamry.com/application-notes/EIS/basics-of-electrochemical-impedance-spectroscopy/" target="_blank">Gamry EIS</a>｜进组仪器培训</td></tr>
+  </table></div></div>
+
+  <h2 class="sec">论文阅读清单（按顺序读）</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><b>① 入门综述（必读，自己团队的）</b>：卢霄、王玉美、吕力等，*Polymer-Based Solid-State Electrolytes for High-Energy-Density Lithium-Ion Batteries – Review*，Adv. Energy Mater. 2023（IF 27.8）。先读<a href="http://www.cailiaoniu.com/?p=254159" target="_blank">材料牛中文导读</a>，再啃英文原版。</li>
+      <li><b>② 团队最新成果（目标课题同源）</b>：Y. Wang 等，*Decoupled Ion Transport via Triadic Molecular Synergy in Flame-Retardant Quasi-Solid Electrolytes for Safe Lithium Metal Batteries*，Adv. Energy Mater. 2025（DOI: 10.1002/aenm.202501236，<a href="https://gz.nstl.gov.cn/paper_detail.html?doi=10.1002/aenm.202501236" target="_blank">记录</a>）。</li>
+      <li><b>③ 团队全固态钠电池线</b>：吕力/王玉美，铁电工程化界面全固态钠金属电池，Adv. Sci. 2023（<a href="https://www.v-suan.com/index.php/2023/10/15/cf654e7052/" target="_blank">解读</a>）；吕力/王玉美/徐朝和，铁电修饰复合电解质，Nano-Micro Lett.（<a href="https://wap.sciencenet.cn/blog-3411509-1453600.html" target="_blank">科学网</a>）。</li>
+      <li><b>④ 进阶综述</b>：固态电池 / 高镍安全的 Nat. Rev. Mater. / Chem. Rev. 综述（篇目我后续补充）。</li>
+    </ul>
+    <div class="note">📖 发挥你的阅读优势：精读①②做结构化笔记（背景/方法/结论/局限），每周写 150 词英文 summary 发我批改——文献训练与学术写作合并进行。<br>📎 <b>全文状态</b>：Adv. Sci. 2022、NML 2024、Nature Energy 2020 已挂载 PDF，Zotero 里双击即读；AEM 2023 综述为 OA，浏览器打开后点 Download PDF 拖入条目即可；AEM 2025、ESM 2024、AEM 2021 需机构订阅（图书馆/课题组）。</div>
+  </div>
+
+  <h2 class="sec">产业前景（为什么这个课题值钱）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>2026 年半固态/固液电池储能<b>商业化全面提速</b>，多家企业进入小批量/规模装车（<a href="https://finance.sina.com.cn/stock/relnews/cn/2026-06-25/doc-inierays0992643.shtml" target="_blank">SMM 分析</a>）；已有 8 款固态电池量产车官宣。</li>
+      <li>技术路线：液态 → 半固态/凝胶 → 准固态 → 全固态；王玉美项目的"阻燃凝胶/准固态 + 兼容现有产线"正处<b>产业化窗口期</b>。</li>
+      <li>安全是硬需求：高镍能量密度越高、热失控风险越大，阻燃电解质直接对应国标安全要求与车企需求。</li>
+      <li>本地产业：重庆长安/赛力斯等车企 + 电池产业链，研究院产学研对接有落地场景。</li>
+      <li>与申研方向（NUS MSE · AME 能量转化与储存）完全同轨。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">阶段时间线</h2>
+  <div class="card">
+    <ul class="timeline">
+      <li><b>现在–8/24</b>：读 AEM 综述中文导读；装 Zotero 建文献库；口语影子跟读不断。</li>
+      <li><b>8/25–9 月开学前</b>：精读 AEM 综述英文版并交 summary；预习电化学基础。</li>
+      <li><b>9 月</b>：宣讲确认课题与导师；提交自荐邮件（我协助起草英文版）；确定细分方向（电解质合成/界面表征/电化学测试）。</li>
+      <li><b>9–10 月</b>：进组安全培训 + 设备学习（手套箱、电池装配、测试柜），跟随研究生上手。</li>
+      <li><b>12–1 月</b>：中期汇报前完成预实验小闭环。</li>
+    </ul>
+    <div class="note">⚖️ 优先级提醒：衔接课程成绩决定直升 NUS，毕设投入循序渐进（开学后每周 10–15 小时），不要本末倒置。</div>
+  </div>
+
+  <div class="task-group" data-group="fyp-prep">
+    <h3>📋 毕设准备行动清单<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="fp-1">读 AEM 综述中文导读（材料牛），建立初步概念</label>
+    <label class="task"><input type="checkbox" class="task" data-id="fp-2">安装 Zotero，把 4 篇阅读清单文献建库</label>
+    <label class="task"><input type="checkbox" class="task" data-id="fp-3">精读 AEM 综述英文版，写 150 词 summary 发我批改</label>
+    <label class="task"><input type="checkbox" class="task" data-id="fp-4">预习电化学基础（电化学窗口/离子电导/EIS 概念）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="fp-5">开学宣讲确认：课题细分方向 + 吕力是否联合指导</label>
+    <label class="task"><input type="checkbox" class="task" data-id="fp-6">提交给王玉美团队的自荐邮件（我协助起草）</label>
+  </div>
+</section>
+
+<!-- ================= 自荐邮件 ================= -->
+<section class="tab-panel" id="tab-email">
+  <div class="tip">✉️ <b>用途</b>：申请进入王玉美团队（吕力体系）完成两学期毕设。占位符 [ ] 全部替换后再发；建议 8/28 报到后、宣讲前后发出，或宣讲当天面谈后作为书面跟进。完整版见《给王玉美团队的自荐邮件.md》。</div>
+
+  <h2 class="sec">英文邮件正文</h2>
+  <div class="card">
+    <pre class="email-box">Subject: Prospective "3+1+1" FYP Student — Interest in the Flame-Retardant Solid-State Battery Project
+
+Dear Dr. Wang,
+
+My name is [中文名 (English name)], an incoming student of the NUS "3+1+1" programme (2026 cohort) from East China University of Science and Technology, majoring in New Energy Materials and Devices. I will begin my bridging year at NUSRI-CQ this September, and I am writing to express my strong interest in joining your team's flame-retardant solid-state battery project (with Prof. Lu Li) for my two-semester Final Year Project.
+
+I have read your team's review "Polymer-Based Solid-State Electrolytes for High-Energy-Density Lithium-Ion Batteries" (Adv. Energy Mater. 2023) and your recent work on flame-retardant quasi-solid electrolytes (Adv. Energy Mater. 2025). I was particularly impressed by the strategy of combining flame-retardant chemistry with electrolyte engineering to achieve both safety and energy density, and by its compatibility with existing production lines.
+
+A brief self-introduction:
+
+- GPA 84.98/100, meeting all academic requirements of the programme;
+- IELTS 7.0 (Reading 9.0) and JLPT N2;
+- strong reading and literature skills, with a solid foundation in new energy materials;
+- currently preparing by studying electrochemistry fundamentals and your team's publications.
+
+I would be very grateful for the opportunity to carry out my FYP in your group. May I ask whether there might be a suitable topic for a "3+1+1" student this year, and how I should apply? I would be glad to send my CV and transcripts if helpful, and to discuss this in person during the orientation in early September.
+
+Thank you very much for your time. I look forward to hearing from you.
+
+Yours sincerely,
+
+[中文名 / English name]
+New Energy Materials and Devices, ECUST
+NUS "3+1+1" Programme (2026 cohort)
+Email: [你的邮箱]　WeChat: [可选]</pre>
+  </div>
+
+  <h2 class="sec">发送要点</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>时机</b>：别太早（人未到重庆）。8/28 报到后、9 月宣讲前后发；或宣讲当天当面交流后再发，作为书面确认，效果最好。</li>
+      <li><b>附件</b>：附一页 PDF 简历（需要的话我帮你做英文简历）；成绩单可等对方索要。</li>
+      <li><b>抄送</b>：宣讲中拿到吕力教授邮箱的话，可 cc 吕力教授。</li>
+      <li><b>跟进</b>：发出后 3–5 个工作日无回复，我再帮你写一封简短跟进邮件。</li>
+      <li><b>细节</b>：替换全部 [ ] 占位符；落款用正式邮箱（学校邮箱最佳）。</li>
+    </ul>
+  </div>
+
+  <div class="task-group" data-group="email-todo">
+    <h3>📮 邮件发送清单<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="em-1">替换邮件中全部 [ ] 占位符</label>
+    <label class="task"><input type="checkbox" class="task" data-id="em-2">准备一页英文简历 PDF（可让我协助制作）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="em-3">宣讲前后发出邮件（或面谈后跟进）</label>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap2">
+    由 DSH 助理导师生成 · 2026-08-17 ｜ 数据源：工作目录档案（个人学习档案.md / 周复盘记录.md / 重庆三日游详细计划.md）｜ 档案更新后此页面同步刷新；任务勾选状态保存在本浏览器本地。
+  </div>
+</footer>
+
+<script>
+// ===== 倒计时 =====
+function daysLeft(dateStr){
+  var target = new Date(dateStr + 'T00:00:00');
+  var diff = target - new Date();
+  return Math.max(0, Math.ceil(diff / 86400000));
+}
+function fmtDays(d){
+  if (d <= 0) return '今天！';
+  return '剩 ' + d + ' 天';
+}
+document.getElementById('cd-trip').textContent = fmtDays(daysLeft('2026-08-25'));
+document.getElementById('cd-report').textContent = fmtDays(daysLeft('2026-08-28'));
+
+// ===== 页签 =====
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b === btn); });
+    document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'tab-' + btn.dataset.tab); });
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+// ===== 任务清单（localStorage 持久化）=====
+var KEY = 'nus311-tasks-v1';
+var saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { saved = {}; }
+
+function updateGroup(group){
+  if (!group) return;
+  var inputs = group.querySelectorAll('input.task');
+  var done = 0;
+  inputs.forEach(function(i){
+    if (i.checked) done++;
+    i.closest('label').classList.toggle('done', i.checked);
+  });
+  var fill = group.querySelector('.fill');
+  if (fill) fill.style.width = (inputs.length ? (done / inputs.length * 100) : 0) + '%';
+  var pct = group.querySelector('.pct');
+  if (pct) pct.textContent = done + '/' + inputs.length;
+}
+
+document.querySelectorAll('input.task').forEach(function(inp){
+  if (inp.dataset.id in saved) inp.checked = !!saved[inp.dataset.id];
+  inp.addEventListener('change', function(){
+    saved[inp.dataset.id] = inp.checked;
+    try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e) {}
+    updateGroup(inp.closest('.task-group'));
+  });
+  updateGroup(inp.closest('.task-group'));
+});
+</script>
+</body>
+</html>
