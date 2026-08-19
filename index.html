@@ -148,6 +148,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   <button class="tab-btn" data-tab="amm">AMM 调研</button>
   <button class="tab-btn" data-tab="fyp">毕设专项</button>
   <button class="tab-btn" data-tab="email">自荐邮件</button>
+  <button class="tab-btn" data-tab="fypselect">选题分析</button>
 </div></nav>
 
 <main>
@@ -678,6 +679,62 @@ Email: [你的邮箱]　WeChat: [可选]</pre>
     <label class="task"><input type="checkbox" class="task" data-id="em-2">准备一页英文简历 PDF（可让我协助制作）</label>
     <label class="task"><input type="checkbox" class="task" data-id="em-3">宣讲前后发出邮件（或面谈后跟进）</label>
   </div>
+</section>
+
+<!-- ================= 选题分析 ================= -->
+<section class="tab-panel" id="tab-fypselect">
+  <div class="tip">📋 <b>MSE311 毕设选题（AY2026-2027）分析 · 2026-08-19</b>｜手册 202 页共 <b>80 个选题</b>，已逐题解析。完整版见《毕设选题分析-AY2026-2027.md》。</div>
+
+  <h2 class="sec">⚠️ 关键发现</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>清单中无王玉美/吕力/诺沃肖洛夫课题</b>（全文检索 0 次）——原第一志愿"阻燃固态锂电池"不在可选范围，需调整策略：清单内选最接近课题 + 宣讲时当面问询"自拟课题"通道。</li>
+      <li>80 题来自 16 位导师，与你调研过的体系相关：王家功（John Wang，院长）、王庆（WANG Qing，AMM 首席）、陈景升（AMM 首席）。</li>
+      <li>题材分布：电池/电解质约 15、电解水/催化约 15、ML/计算约 12、2D 器件 6、其余为磁学/光子/生物/应用材料。</li>
+      <li>手册含设备要求与"学生收益"栏目；仅 [35] 气凝胶课题明确可在 NUSRI（重庆）平台执行——<b>各课题执行地务必宣讲时确认</b>。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">A 级首选（按推荐顺序）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:34px">#</th><th>课题</th><th style="width:130px">导师</th><th>理由</th></tr>
+    <tr><td><b>39</b></td><td>Gelation Effect of Aqueous Polymer Electrolytes（聚合物凝胶电解质/界面动力学）</td><td><b>John Wang（王家功·院长·两院院士）</b></td><td>与 AEM 综述知识体系同源；名头最响；实验为主、设备友好</td></tr>
+    <tr><td><b>66</b></td><td>Ionic Liquid Additive Strategy for AZIBs（离子液体添加剂/锌碘电池）</td><td>Yang Hui Ying</td><td>电解质添加剂工程，与阻燃添加剂思路同源；纯实验，上手快</td></tr>
+    <tr><td><b>50</b></td><td>Liquid Synthesis of Halide Solid-State Electrolyte（卤化物固态电解质合成）</td><td>Shyue Ping Ong</td><td>直接对位"固态电解质"主线；计算+实验双栖大牛组</td></tr>
+    <tr><td><b>70</b></td><td>Na2MnFe(CN)6 普鲁士蓝钠电正极</td><td>Yang Hui Ying</td><td>钠电主线（与王玉美团队钠电线知识迁移最大化）</td></tr>
+  </table></div></div>
+
+  <h2 class="sec">B 级备选</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>38</b> Water-in-Salt 电解液溶剂化（John Wang，与 39 二选一）｜<b>52</b> 水系液流电池大储（<b>WANG Qing</b>）｜<b>51/53/54</b> 解耦电解水/海水制氢/电合成（WANG Qing）</li>
+      <li><b>23/24</b> 卤化物固态电解质界面层 / Li3PS4 离子传导（Zeyu Deng）——主题对口但<b>纯计算</b>，需 Python/固体物理基础，宣讲确认有培训再考虑</li>
+      <li><b>29</b> COF 增强水凝胶电解质（He Chaobin）——涉及有机合成（你的短板，但可借机补强）｜<b>11/12</b> 过渡金属硫化物赝电容（Blackwood，设备简单适合保底）</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">C 级（不建议）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>Avsar 1–6（2D 器件工艺）｜Chen Jingsheng 7–10（磁学/自旋，固体物理短板）｜Liu Xiaogang 44–46（光子学）</li>
+      <li>He Qian 32–37（腐蚀/气凝胶/电致变色，[35] 可 NUSRI 做，可保底）｜Wu Changsheng 55–59（生物电子）</li>
+      <li>Peichen Zhong 75–80 / Ong 47–48 / Deng 20/22/25（纯 ML 计算）｜Xue Junmin 60–65 / Ming Zhao 72–74 / Andreeva 14–19 / John Wang 41–43（电解水/催化，若走氢能路线可升 B）</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">宣讲必问清单</h2>
+  <div class="card">
+    <ul class="plain">
+      <li>① <b>清单外能否自拟课题</b>？王玉美/吕力团队是否接受 3+1+1 学生进入其实验室（阻燃固态锂电池）？</li>
+      <li>② <b>执行地</b>：每个课题在重庆还是新加坡做？现场带教的博士生/RA 是谁？导师多久来渝？</li>
+      <li>③ <b>志愿规则</b>：每课题几人、几个志愿、是否调剂？</li>
+      <li>④ <b>计算课题门槛</b>：Deng/Ong/Zhong 组是否提供 Python/DFT 入门培训？</li>
+      <li>⑤ <b>毕设与直升关系</b>：毕设是否计入衔接课程考核？</li>
+      <li>⑥ 是否允许先邮件联系导师（我帮你起草英文邮件）。</li>
+    </ul>
+  </div>
+
+  <div class="note">🎯 <b>填报策略</b>：第一志愿 <b>39 或 66</b>（电解质方向+名头/对口平衡）→ 第二 <b>50 或 70</b> → 第三 <b>52</b>（保底 11/12 或 35）；同时宣讲当天当面问王玉美团队能否接收——两条腿走路，保住"阻燃固态锂电池"主线的可能性。</div>
 </section>
 
 </main>
