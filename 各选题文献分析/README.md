@@ -42,8 +42,8 @@ audience: 毕设文献精读档案（NUS 311 MSE）
 
 | 类型 | 链接格式 | 用途 |
 |---|---|---|
-| 📄 网页版 | `https://oliver102259.github.io/test/各选题文献分析/<课题>/文献精读-XXX.html` | 浏览器直接阅读（推荐，工作台引用此链接） |
-| 📥 Word 下载 | `https://oliver102259.github.io/test/各选题文献分析/<课题>/文献精读-XXX.docx` | 下载 Word 文件 |
+| 📄 网页版 | `https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%3C%E8%AF%BE%E9%A2%98%3E/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-XXX.html%60 | 浏览器直接阅读（推荐，工作台引用此链接） |
+| 📥 Word 下载 | `https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%3C%E8%AF%BE%E9%A2%98%3E/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-XXX.docx%60 | 下载 Word 文件 |
 | 源文件 | 仓库内 `.md`（Git 提交历史 = 版本历史） | 溯源/对比 |
 
 > 注：`.md` 在 Pages 上被 Jekyll 渲染为同名 `.html`，因此网页版链接后缀为 `.html`。
@@ -60,7 +60,7 @@ audience: 毕设文献精读档案（NUS 311 MSE）
    ```
    流水线自动完成：规范化 → 生成 front-matter（标题/日期/版本号自动递增）→ 转 Word → 按课题归档 → Git 推送。
    - 幂等：源未变化时自动跳过（增量）；`--force` 强制重转；不带 `--push` 只转换不推送。
-4. （可选）验证 Pages 链接：`https://oliver102259.github.io/test/各选题文献分析/<课题>/文献精读-XXX.html`。
+4. （可选）验证 Pages 链接：`https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%3C%E8%AF%BE%E9%A2%98%3E/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-XXX.html%60%E3%80%82
 
 ### 场景二：修改已有报告
 
