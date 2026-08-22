@@ -3,126 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- impeccable-disable side-tab: 时间线语义竖线与章节渐变条为刻意设计（唯一强调模式） -->
 <title>NUS 311 导师助手 · 学业看板与重庆旅行指南</title>
 <style>
 :root{
-  --blue:#003D7C; --blue-2:#0b5cad; --orange:#EF7C00; --orange-2:#ff9a3d;
-  --bg:#f4f6f9; --card:#ffffff; --line:#e3e8ef; --text:#1f2937; --muted:#6b7280;
-  --green:#0e9f6e;
+  /* ===== 色彩 token（蓝橙主调 · 2026-08-22 Impeccable 翻新）===== */
+  --blue:#003D7C; --blue-2:#0B5CAD; --blue-soft:#EFF5FB; --blue-line:#CFE0F2;
+  --orange:#EF7C00; --orange-deep:#9A4500; --orange-soft:#FFF3E6;
+  --grad:linear-gradient(135deg,#003D7C 0%,#0B5CAD 55%,#EF7C00 135%);
+  --grad-blue:linear-gradient(120deg,#003D7C 0%,#0B5CAD 100%);
+  --grad-bar:linear-gradient(90deg,#EF7C00 0%,#0B5CAD 100%);
+  --bg:#F4F6F9; --card:#FFFFFF; --line:#E3E8EF; --text:#1F2937; --muted:#5B6572;
+  --green:#0E9F6E;
+  /* 语义色（全部满足 WCAG AA）*/
+  --info-bg:#EFF5FB; --info-line:#CFE0F2; --info-text:#0B4D8C;
+  --warn-bg:#FFF3E6; --warn-line:#F5D5AC; --warn-text:#9A4500;
+  /* 间距（4px 基数）与圆角 */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --r-sm:10px; --r-md:14px; --r-pill:999px;
 }
 *{box-sizing:border-box; margin:0; padding:0;}
-body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
-  background:var(--bg); color:var(--text); line-height:1.6;}
-a{color:var(--blue-2);}
+body{font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.65; font-size:15px;}
+a{color:var(--blue-2); text-decoration:none;}
+a:hover{color:var(--blue); text-decoration:underline;}
 
 /* ===== 头部 ===== */
-header{background:linear-gradient(120deg,var(--blue) 0%,var(--blue-2) 60%,#1269c4 100%);
-  color:#fff; padding:28px 20px 22px;}
+header{background:var(--grad-blue); color:#fff; padding:26px 20px 20px;}
 header .wrap{max-width:1020px; margin:0 auto;}
-header h1{font-size:26px; letter-spacing:.5px;}
-header .sub{margin-top:6px; opacity:.9; font-size:14px;}
+header h1{font-size:26px; letter-spacing:.5px; font-weight:800;}
+header .sub{margin-top:6px; opacity:.92; font-size:14px;}
 .pills{margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;}
 .pill{background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35);
-  border-radius:999px; padding:6px 14px; font-size:13.5px;}
-.pill b{color:var(--orange-2); font-size:15px;}
+  border-radius:var(--r-pill); padding:6px 14px; font-size:14px; color:#fff;}
+.pill b{color:#FFD9A8; font-size:15px;}  /* 浅橙字在深蓝底 ≥4.5:1 */
 
 /* ===== 导航 ===== */
 nav{position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line);}
-nav .wrap{max-width:1020px; margin:0 auto; display:flex; overflow-x:auto;}
-.tab-btn{flex:0 0 auto; padding:14px 20px; font-size:15px; background:none; border:none;
-  border-bottom:3px solid transparent; cursor:pointer; color:var(--muted);}
-.tab-btn.active{color:var(--blue); border-bottom-color:var(--orange); font-weight:700;}
+nav .wrap{max-width:1020px; margin:0 auto; display:flex; overflow-x:auto; gap:2px; padding:6px 8px; scrollbar-width:thin;}
+.tab-btn{flex:0 0 auto; padding:10px 18px; font-size:15px; font-weight:500; background:none; border:none;
+  border-radius:var(--r-pill); cursor:pointer; color:var(--muted); transition:color .2s, background .25s, box-shadow .25s;}
+.tab-btn:hover{color:var(--blue); background:var(--blue-soft);}
+.tab-btn.active{background:var(--grad-blue); color:#fff; font-weight:700;
+  box-shadow:0 2px 8px rgba(0,61,124,.28);}
 
 /* ===== 主体 ===== */
-main{max-width:1020px; margin:22px auto 60px; padding:0 16px;}
+main{max-width:1020px; margin:20px auto 60px; padding:0 16px;}
 .tab-panel{display:none;}
 .tab-panel.active{display:block; animation:fade .25s ease;}
 @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
 
-h2.sec{font-size:19px; margin:26px 0 12px; padding-left:10px; border-left:4px solid var(--orange);}
-.card{background:var(--card); border:1px solid var(--line); border-radius:14px;
-  padding:18px 20px; margin-bottom:16px; box-shadow:0 1px 3px rgba(16,42,84,.05);}
-.card h3{font-size:16px; margin-bottom:10px; color:var(--blue);}
-.card h4{font-size:14.5px; margin:12px 0 6px; color:var(--text);}
+/* 章节标题：渐变条（唯一强调模式）*/
+h2.sec{font-size:17px; margin:24px 0 12px; padding-left:12px; position:relative; color:var(--blue); font-weight:700;}
+h2.sec::before{content:""; position:absolute; left:0; top:2px; bottom:2px; width:4px;
+  border-radius:2px; background:var(--grad-bar);}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:16px 18px; margin-bottom:14px; box-shadow:0 1px 3px rgba(16,42,84,.05);}
+.card h3{font-size:15px; margin-bottom:10px; color:var(--blue);}
+.card h4{font-size:14px; margin:12px 0 6px; color:var(--text);}
 
 .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px;}
-.stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
-.stat .k{font-size:12.5px; color:var(--muted);}
+.stat{background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); padding:14px 16px;}
+.stat .k{font-size:13px; color:var(--muted);}
 .stat .v{font-size:20px; font-weight:800; color:var(--blue); margin-top:4px;}
-.stat .d{font-size:12.5px; color:var(--muted); margin-top:2px;}
-.stat.hl{border-top:3px solid var(--orange);}
+.stat .d{font-size:13px; color:var(--muted); margin-top:2px;}
 
 ul.plain{list-style:none;}
-ul.plain li{padding:6px 0 6px 22px; position:relative; border-bottom:1px dashed var(--line); font-size:14.5px;}
+ul.plain li{padding:6px 0 6px 22px; position:relative; border-bottom:1px dashed var(--line); font-size:14px;}
 ul.plain li:last-child{border-bottom:none;}
 ul.plain li::before{content:"▸"; position:absolute; left:4px; color:var(--orange);}
-ul.dot{list-style:none; font-size:14.5px;}
+ul.dot{list-style:none; font-size:14px;}
 ul.dot li{padding:5px 0 5px 20px; position:relative;}
 ul.dot li::before{content:"•"; position:absolute; left:6px; color:var(--blue-2);}
 
 /* 任务清单 */
-.task-group{background:var(--card); border:1px solid var(--line); border-radius:14px;
-  padding:16px 20px; margin-bottom:14px;}
-.task-group h3{font-size:15.5px; color:var(--blue); display:flex; justify-content:space-between; align-items:center; gap:10px;}
+.task-group{background:var(--card); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:14px 18px; margin-bottom:14px;}
+.task-group h3{font-size:15px; color:var(--blue); display:flex; justify-content:space-between; align-items:center; gap:10px;}
 .task-group .head-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
-.bar{width:90px; height:8px; background:#e7edf5; border-radius:99px; overflow:hidden;}
-.bar .fill{height:100%; width:0; background:linear-gradient(90deg,var(--orange),var(--orange-2));
-  border-radius:99px; transition:width .3s;}
-.pct{font-size:12.5px; color:var(--muted); font-weight:400;}
-label.task{display:flex; align-items:flex-start; gap:10px; padding:7px 2px; font-size:14.5px; cursor:pointer;}
-label.task input{margin-top:4px; width:16px; height:16px; accent-color:var(--orange); flex:0 0 auto;}
+.bar{width:90px; height:8px; background:#E7EDF5; border-radius:var(--r-pill); overflow:hidden;}
+.bar .fill{height:100%; width:0; background:var(--grad-bar); border-radius:var(--r-pill); transition:width .4s cubic-bezier(.4,0,.2,1);}
+.pct{font-size:13px; color:var(--muted); font-weight:400;}
+label.task{display:flex; align-items:flex-start; gap:10px; padding:7px 2px; font-size:14px; cursor:pointer;
+  border-radius:8px; transition:background .15s;}
+label.task:hover{background:var(--blue-soft);}
+label.task input{margin-top:4px; width:17px; height:17px; accent-color:var(--blue-2); flex:0 0 auto; cursor:pointer;}
 label.task.done{color:var(--muted); text-decoration:line-through;}
 
 /* 表格 */
-.table-scroll{overflow-x:auto;}
-table{width:100%; border-collapse:collapse; font-size:13.5px; background:#fff;}
-th{background:#eef3fa; color:var(--blue); text-align:left; padding:8px 10px; border:1px solid var(--line); white-space:nowrap;}
+.table-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+table{width:100%; border-collapse:collapse; font-size:13px; background:#fff;}
+th{background:var(--blue-soft); color:var(--blue); text-align:left; padding:8px 10px;
+  border:1px solid var(--line); white-space:nowrap; font-weight:600;}
 td{padding:8px 10px; border:1px solid var(--line); vertical-align:top;}
-tr:nth-child(even) td{background:#fafcff;}
+tr:nth-child(even) td{background:#F8FAFD;}
+tr:hover td{background:#F0F6FF;}
+/* 文献分析大表：冻结首列 */
+.lit-table th:first-child, .lit-table td:first-child{position:sticky; left:0; z-index:2; box-shadow:1px 0 0 var(--line);}
+.lit-table td:first-child{background:#fff; font-weight:600; text-align:center;}
+.lit-table tr:nth-child(even) td:first-child{background:#F8FAFD;}
+.lit-table tr:hover td:first-child{background:#F0F6FF;}
+.lit-table th:first-child{background:var(--blue-soft); z-index:3;}
 
 /* 行程日卡片 */
-.day-card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+.day-card{background:var(--card); border:1px solid var(--line); border-radius:var(--r-md);
   margin-bottom:18px; overflow:hidden;}
 .day-head{display:flex; align-items:center; gap:12px; padding:14px 20px; color:#fff;
-  background:linear-gradient(120deg,var(--blue) 0%,var(--blue-2) 100%);}
-.day-head .badge{background:var(--orange); border-radius:10px; padding:6px 10px;
+  background:var(--grad-blue);}
+.day-head .badge{background:#fff; color:var(--blue); border-radius:10px; padding:6px 10px;
   font-weight:800; font-size:14px; white-space:nowrap;}
 .day-head .t{font-size:16px; font-weight:700;}
-.day-head .s{font-size:12.5px; opacity:.85;}
-.day-body{padding:16px 18px;}
+.day-head .s{font-size:13px; opacity:.85;}
+.day-body{padding:14px 18px;}
 
 /* 时间线 */
-.timeline{list-style:none; padding-left:18px; border-left:3px solid #d8e4f2;}
-.timeline li{padding:7px 0 7px 14px; position:relative; font-size:14.5px;}
+.timeline{list-style:none; padding-left:18px; border-left:3px solid var(--blue-line);}
+.timeline li{padding:7px 0 7px 14px; position:relative; font-size:14px;}
 .timeline li::before{content:""; position:absolute; left:-9px; top:13px; width:12px; height:12px;
-  background:var(--orange); border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 2px var(--orange);}
+  background:var(--grad-bar); border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 2px var(--orange);}
 .timeline li b{color:var(--blue);}
 
-.tag{display:inline-block; background:#eef3fa; color:var(--blue); border-radius:6px;
+.tag{display:inline-block; background:var(--blue-soft); color:var(--blue); border-radius:6px;
   padding:2px 8px; font-size:12px; margin:2px 4px 2px 0;}
-.tag.warn{background:#fff3e6; color:#c25700;}
-.tag.ok{background:#e8f7f0; color:var(--green);}
+.tag.warn{background:var(--warn-bg); color:var(--warn-text);}
+.tag.ok{background:#E8F7F0; color:var(--green);}
 
-.note{background:#fff8ee; border:1px solid #ffe3bd; border-radius:10px; padding:12px 14px;
-  font-size:14px; margin:10px 0; color:#7a4a12;}
-.email-box{background:#f8fafc; border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+.note{background:var(--warn-bg); border:1px solid var(--warn-line); border-radius:var(--r-sm); padding:12px 14px;
+  font-size:14px; margin:10px 0; color:var(--warn-text);}
+.email-box{background:#F8FAFC; border:1px solid var(--line); border-radius:var(--r-sm); padding:16px 18px;
   font-family:Consolas,"Courier New",monospace; font-size:13px; line-height:1.75; white-space:pre-wrap;
-  word-break:break-word; color:#2b3440; margin:10px 0;}
-.tip{background:#eef7ff; border:1px solid #cfe6ff; border-radius:10px; padding:12px 14px;
-  font-size:14px; margin:10px 0; color:#0b4d8c;}
+  word-break:break-word; color:#2B3440; margin:10px 0;}
+.tip{background:var(--info-bg); border:1px solid var(--info-line); border-radius:var(--r-sm); padding:12px 14px;
+  font-size:14px; margin:10px 0; color:var(--info-text);}
 
-.btn{display:inline-block; background:var(--orange); color:#fff; border:none; border-radius:10px;
-  padding:9px 18px; font-size:14px; cursor:pointer; font-family:inherit;}
-.btn:hover{background:#d96d00;}
+.btn{display:inline-block; background:var(--grad-blue); color:#fff; border:none; border-radius:var(--r-sm);
+  padding:9px 18px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;
+  transition:box-shadow .2s, transform .15s;}
+.btn:hover{box-shadow:0 3px 10px rgba(0,61,124,.3); transform:translateY(-1px);}
 
-footer{max-width:1020px; margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:12.5px;}
-footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
+footer{max-width:1020px; margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:13px;}
+footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90deg,var(--blue),var(--orange)) 1;
+  padding-top:14px;}
 
+/* ===== 响应式：移动端（企业微信内嵌为主）===== */
+@media (max-width:640px){
+  body{font-size:14px;}
+  header{padding:20px 14px 16px;}
+  header h1{font-size:22px;}
+  .sub{font-size:13px;}
+  main{padding:0 10px; margin-top:14px;}
+  .card{padding:12px 14px;}
+  h2.sec{font-size:16px; margin:20px 0 10px;}
+  table{font-size:13px;}
+  th,td{padding:7px 8px;}
+  .tab-btn{padding:9px 14px; font-size:14px;}
+  .pills{gap:8px;}
+  .pill{padding:5px 12px; font-size:13px;}
+  .bar{width:70px;}
+}
+
+/* ===== 打印 ===== */
 @media print{
   header, nav, footer, .no-print{display:none !important;}
   body{background:#fff;}
   .tab-panel{display:block !important; margin-bottom:24px;}
   .card,.day-card,.task-group{box-shadow:none; break-inside:avoid;}
+}
+
+/* ===== 动效可访问性 ===== */
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important;}
 }
 </style>
 </head>
@@ -458,7 +508,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
 
   <h2 class="sec">中心概况</h2>
   <div class="card">
-    <p style="font-size:14.5px">先进制造与材料中心（AMM）是 NUSRI-CQ 牵头的<b>跨学科研发中心</b>，汇集设计、制造、化学、材料和计算领域专家，目标是建设连接增材制造平台与 CNC 加工中心的<b>集成化设计与快速响应智能制造平台</b>，服务汽车、航空航天、精密工程、再制造、医疗和消费等领域的<b>高附加值零件制造</b>。</p>
+    <p style="font-size:14px">先进制造与材料中心（AMM）是 NUSRI-CQ 牵头的<b>跨学科研发中心</b>，汇集设计、制造、化学、材料和计算领域专家，目标是建设连接增材制造平台与 CNC 加工中心的<b>集成化设计与快速响应智能制造平台</b>，服务汽车、航空航天、精密工程、再制造、医疗和消费等领域的<b>高附加值零件制造</b>。</p>
     <p style="margin-top:10px;font-size:13px;color:var(--muted)">🏢 双址：办公 渝北区卉竹路 2 号重庆互联网产业园二期 4 号楼（023-67392300）｜龙兴园区 龙兴镇两江大道 618 号（明月湖畔）。研究院另有智能传感与人工智能中心、现代物流中心、金融中心，以及<b>二维材料研究中心</b>（主任：诺沃肖洛夫）。</p>
   </div>
 
@@ -573,14 +623,14 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
 
   <h2 class="sec">课题定位</h2>
   <div class="card">
-    <p style="font-size:14.5px">按终版 7 志愿分两条主线：<b>固态电解质（实验+计算）</b>——50 卤化物SSE液相合成 / 23 界面层计算 / 24 离子传导计算 / 22 LLM 热输运 / 47 MLIP 相稳定性；<b>水系电解质与电池</b>——39 聚合物凝胶电解质 / 70 普鲁士蓝钠电。<br>
+    <p style="font-size:14px">按终版 7 志愿分两条主线：<b>固态电解质（实验+计算）</b>——50 卤化物SSE液相合成 / 23 界面层计算 / 24 离子传导计算 / 22 LLM 热输运 / 47 MLIP 相稳定性；<b>水系电解质与电池</b>——39 聚合物凝胶电解质 / 70 普鲁士蓝钠电。<br>
     各课题的官方文献、学生要求与课程视频已按课题备好（见《毕设知识准备-按课题.md》与 Zotero「毕设-7志愿课题」集合）。<br>
     应用方向：动力电池与储能、固态电池产业、AI4Materials。</p>
   </div>
 
   <h2 class="sec">知识准备 · 按课题版（推翻第一版，2026-08-19）</h2>
   <div class="card">
-    <p style="font-size:13.5px;color:var(--muted)"><b>公共基础（全课题）</b>：🎬 <a href="https://www.bilibili.com/video/BV14x4y1A7dq/" target="_blank">胡吉明《电化学》</a>｜🎬 <a href="https://www.bilibili.com/video/BV1sHU9BmEne/" target="_blank">黑马 Python 零基础全套</a>｜🎬 <a href="https://www.bilibili.com/video/BV1YdfyBfEb3/" target="_blank">Linux 基础 296 集</a>｜🎬 <a href="https://www.bilibili.com/video/BV1SEynY4Erf/" target="_blank">锂电原理</a>｜📄 EIS 教程（Zotero·PDF）。完整分课题版见《毕设知识准备-按课题.md》。</p>
+    <p style="font-size:14px;color:var(--muted)"><b>公共基础（全课题）</b>：🎬 <a href="https://www.bilibili.com/video/BV14x4y1A7dq/" target="_blank">胡吉明《电化学》</a>｜🎬 <a href="https://www.bilibili.com/video/BV1sHU9BmEne/" target="_blank">黑马 Python 零基础全套</a>｜🎬 <a href="https://www.bilibili.com/video/BV1YdfyBfEb3/" target="_blank">Linux 基础 296 集</a>｜🎬 <a href="https://www.bilibili.com/video/BV1SEynY4Erf/" target="_blank">锂电原理</a>｜📄 EIS 教程（Zotero·PDF）。完整分课题版见《毕设知识准备-按课题.md》。</p>
   </div>
   <div class="card"><div class="table-scroll"><table>
     <tr><th style="width:44px">课题</th><th>官方核心文献（Zotero 已入集合）</th><th>补充课程视频（B站实测）</th></tr>
@@ -592,7 +642,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
     <tr><td><b>47</b> MLIP相稳定性</td><td>官方 11/11 全部带 PDF + JMCA✅ npj✅ MACE✅；集合共 14 条 / <b>14 带 PDF</b></td><td>🎬 <a href="https://www.bilibili.com/video/BV1rK411f75f/" target="_blank">高通量ML材料</a>｜🎬 <a href="https://www.bilibili.com/video/BV18P411W7oQ/" target="_blank">AI赋能材料设计</a></td></tr>
     <tr><td><b>70</b> 普鲁士蓝钠电</td><td>ACS Energy Lett. 2025 ｜ 热失控综述（✅PDF）</td><td>🎬 <a href="https://www.bilibili.com/video/BV1sQQpBqERw/" target="_blank">钠电讲透</a>｜🎬 <a href="https://www.bilibili.com/video/BV1bG4y1R7KS/" target="_blank">钠电科普</a></td></tr>
   </table></div>
-  <p style="margin-top:8px;font-size:12.5px;color:var(--muted)">Zotero 左侧「毕设-7志愿课题」树下按课题浏览；官方文献+学生要求+课程视频全表见《毕设知识准备-按课题.md》。✅ 全库核查（2026-08-19）：7 个课题集合与全局均无重复文献；跨集合共享为基础文献的刻意复用（AEM2023×4、热失控×3、EIS×3、JMCA×4）；已补 4 篇官方文献（Tachez/Lepley/Togo/Sonigara）。</p>
+  <p style="margin-top:8px;font-size:13px;color:var(--muted)">Zotero 左侧「毕设-7志愿课题」树下按课题浏览；官方文献+学生要求+课程视频全表见《毕设知识准备-按课题.md》。✅ 全库核查（2026-08-19）：7 个课题集合与全局均无重复文献；跨集合共享为基础文献的刻意复用（AEM2023×4、热失控×3、EIS×3、JMCA×4）；已补 4 篇官方文献（Tachez/Lepley/Togo/Sonigara）。</p>
   </div>
 
   <h2 class="sec">论文阅读清单（按顺序读）</h2>
@@ -713,12 +763,12 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
 <section class="tab-panel" id="tab-papers">
   <div class="tip">📚 <b>文献精读报告库（2026-08-21 · Zotero 全量核对版）</b>：以下清单逐条来自 Zotero「毕设-7志愿课题」7 个集合（共 86 条，其中 67 个 PDF 已复制至 <b>D:\NUS311RA\毕设7课题文献\&lt;课题&gt;\</b>，可按课题逐篇精读）。✅=有 PDF｜🔒=无 PDF（需订阅）｜🌐=网页资源｜📖=精读报告（网页版/Word）；报告列附 GitHub Pages 链接（网页版/Word），更新后链接不变、内容自动刷新。维护 SOP 见 <a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/README.html" target="_blank">README 维护手册</a>。</div>
   <h2 class="sec">📖 共享综述（跨课题基础文献 · 已精读）</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th>文献（英文）</th><th style="width:240px">中文名</th><th style="width:190px">精读报告</th></tr>
     <tr><td><i>Lu X., Wang Y. et al.</i> 2023 · <i>Polymer-Based Solid-State Electrolytes for High-Energy-Density Lithium-Ion Batteries – Review</i>（Adv. Energy Mater. 13, 2301746；NUS ME + NUSRI-CQ）</td><td>聚合物基固态电解质综述（全文 28 页精读）</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-AEM2023%E7%BB%BC%E8%BF%B0.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-AEM2023%E7%BB%BC%E8%BF%B0.docx" target="_blank">Word</a></td></tr>
   </table></div></div>
   <h2 class="sec">课题50 · 卤化物SSE液相合成（Ong）｜10 条 · 6 带 PDF</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Wang K. et al.</i> 2021 · <i>A cost-effective and humidity-tolerant chloride solid-state electrolyte</i>（Nat. Commun.）</td><td>低成本、耐湿氯化物固态电解质（官方[4]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Wang2021%E6%B0%AF%E5%8C%96%E7%89%A9SSE.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Wang2021%E6%B0%AF%E5%8C%96%E7%89%A9SSE.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Li Y. et al.</i> 2025 · <i>Decoupled Ion Transport via Triadic Molecular Synergy in Flame-Retardant Quasi-Solid Electrolytes for Safe Li Metal Batteries</i>（Adv. Energy Mater.）</td><td>阻燃准固态电解质：三元分子协同解耦离子传输</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Li2025%E9%98%BB%E7%87%83%E5%87%86%E5%9B%BA%E6%80%81.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Li2025%E9%98%BB%E7%87%83%E5%87%86%E5%9B%BA%E6%80%81.docx" target="_blank">Word</a></td></tr>
@@ -735,7 +785,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   </div>
 
   <h2 class="sec">课题23 · 卤化物SSE界面层计算（Deng）｜17 条 · 11 带 PDF</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Nie et al.</i> 2023 · <i>Halide-based solid electrolytes: The history, progress, and challenges</i>（Interdiscip. Mater.）</td><td>卤化物固态电解质：历史、进展与挑战（官方[1]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9823-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E7%95%8C%E9%9D%A2%E5%B1%82%E8%AE%A1%E7%AE%97/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-23-Nie2023%E5%8D%A4%E5%8C%96%E7%89%A9%E7%BB%BC%E8%BF%B0.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9823-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E7%95%8C%E9%9D%A2%E5%B1%82%E8%AE%A1%E7%AE%97/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-23-Nie2023%E5%8D%A4%E5%8C%96%E7%89%A9%E7%BB%BC%E8%BF%B0.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Wu et al.</i> 2024 · <i>Exploring the Potential of Halide Electrolytes for Next-Generation All-Solid-State Batteries</i>（Adv. Funct. Mater.）</td><td>探索卤化物电解质的潜力（官方[2]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9823-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E7%95%8C%E9%9D%A2%E5%B1%82%E8%AE%A1%E7%AE%97/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-23-Wu2024%E5%8D%A4%E5%8C%96%E7%89%A9AFM.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9823-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E7%95%8C%E9%9D%A2%E5%B1%82%E8%AE%A1%E7%AE%97/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-23-Wu2024%E5%8D%A4%E5%8C%96%E7%89%A9AFM.docx" target="_blank">Word</a></td></tr>
@@ -759,7 +809,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   </div>
 
   <h2 class="sec">课题24 · Li₃PS₄ 离子传导计算（Deng）｜20 条 · 12 带 PDF</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Wang et al.</i> 2015 · <i>Design principles for solid-state lithium superionic conductors</i>（Nat. Mater.）</td><td>固态锂超离子导体设计原则（官方[1]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9824-Li3PS4%E7%A6%BB%E5%AD%90%E4%BC%A0%E5%AF%BC%E8%AE%A1%E7%AE%97/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-24-Wang2015%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9824-Li3PS4%E7%A6%BB%E5%AD%90%E4%BC%A0%E5%AF%BC%E8%AE%A1%E7%AE%97/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-24-Wang2015%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Jun et al.</i> 2024 · <i>Diffusion mechanisms of fast lithium-ion conductors</i>（Nat. Rev. Mater.）</td><td>快锂离子导体的扩散机制（官方[2]）</td><td style="text-align:center">🔒</td><td>—</td></tr>
@@ -786,7 +836,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   </div>
 
   <h2 class="sec">课题39 · 凝胶电解质（John Wang）｜8 条 · 7 带 PDF</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Hu et al.</i> 2025 · <i>Mechanically Strong and Tough Ionic Liquid Gel Electrolyte for Four-Electron Zn-I₂ Battery</i>（J. Am. Chem. Soc.）</td><td>四电子锌碘电池坚韧离子液体凝胶电解质（官方[1]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9839-%E5%87%9D%E8%83%B6%E7%94%B5%E8%A7%A3%E8%B4%A8/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-39-Hu2025JACS%E5%87%9D%E8%83%B6.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9839-%E5%87%9D%E8%83%B6%E7%94%B5%E8%A7%A3%E8%B4%A8/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-39-Hu2025JACS%E5%87%9D%E8%83%B6.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Yu et al.</i> 2026 · <i>Cryoprotective Hydrogel Electrolyte With Dynamic Hydrogen Bonds for All-Climate Zn-I₂ Batteries</i>（Adv. Funct. Mater.）</td><td>动态氢键防冻水凝胶电解质：全天候锌碘电池（官方[2]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9839-%E5%87%9D%E8%83%B6%E7%94%B5%E8%A7%A3%E8%B4%A8/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-39-Yu2026%E9%98%B2%E5%86%BB%E5%87%9D%E8%83%B6.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9839-%E5%87%9D%E8%83%B6%E7%94%B5%E8%A7%A3%E8%B4%A8/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-39-Yu2026%E9%98%B2%E5%86%BB%E5%87%9D%E8%83%B6.docx" target="_blank">Word</a></td></tr>
@@ -800,7 +850,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   </div>
 
   <h2 class="sec">课题47 · MLIP 相稳定性（Ong）｜14 条 · 14 带 PDF（全部有 PDF）</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Chen & Ong</i> 2022 · <i>A universal graph deep learning interatomic potential for the periodic table (M3GNet)</i>（Nat. Comput. Sci.）</td><td>M3GNet：周期表通用图深度学习原子间势（官方[1]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9847-MLIP%E7%9B%B8%E7%A8%B3%E5%AE%9A%E6%80%A7/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-47-M3GNet2022.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9847-MLIP%E7%9B%B8%E7%A8%B3%E5%AE%9A%E6%80%A7/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-47-M3GNet2022.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Horton et al.</i> 2025 · <i>Accelerated data-driven materials science with the Materials Project</i>（Nat. Mater.）</td><td>Materials Project 数据驱动材料科学（官方[2]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9847-MLIP%E7%9B%B8%E7%A8%B3%E5%AE%9A%E6%80%A7/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-47-Horton2025MaterialsProject.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9847-MLIP%E7%9B%B8%E7%A8%B3%E5%AE%9A%E6%80%A7/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-47-Horton2025MaterialsProject.docx" target="_blank">Word</a></td></tr>
@@ -820,7 +870,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   </div>
 
   <h2 class="sec">课题70 · 普鲁士蓝钠电（Yang Hui Ying）｜9 条 · 9 带 PDF（全部有 PDF）</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Li et al.</i> 2020 · <i>Ultralow-Concentration Electrolyte for Na-Ion Batteries</i>（ACS Energy Lett. 2020, 5, 1156–1158）</td><td>超低浓度钠离子电池电解液（官方[1]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9870-%E6%99%AE%E9%B2%81%E5%A3%AB%E8%93%9D%E9%92%A0%E7%94%B5/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-70-Li2020%E8%B6%85%E4%BD%8E%E6%B5%93%E5%BA%A6.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9870-%E6%99%AE%E9%B2%81%E5%A3%AB%E8%93%9D%E9%92%A0%E7%94%B5/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-70-Li2020%E8%B6%85%E4%BD%8E%E6%B5%93%E5%BA%A6.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Li et al.</i> 2021 · <i>Multi-role TiO₂ layer coated carbon@few-layered MoS₂ nanotubes for durable lithium storage</i>（Chem. Eng. J.）</td><td>多角色 TiO₂ 包覆碳@少层 MoS₂ 纳米管（官方[2]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9870-%E6%99%AE%E9%B2%81%E5%A3%AB%E8%93%9D%E9%92%A0%E7%94%B5/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-70-Li2021TiO2MoS2.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9870-%E6%99%AE%E9%B2%81%E5%A3%AB%E8%93%9D%E9%92%A0%E7%94%B5/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-70-Li2021TiO2MoS2.docx" target="_blank">Word</a></td></tr>
@@ -835,7 +885,7 @@ footer .wrap2{border-top:1px solid var(--line); padding-top:14px;}
   </div>
 
   <h2 class="sec">课题22 · LLM Agent 热输运（Deng）｜8 条 · 8 带 PDF（全部有 PDF）</h2>
-  <div class="card"><div class="table-scroll"><table>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>1</td><td><i>Togo & Tanaka</i> 2015 · <i>First principles phonon calculations in materials science</i>（Scr. Mater.）</td><td>第一性原理声子计算（官方[1]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-Togo2015%E5%A3%B0%E5%AD%90.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-Togo2015%E5%A3%B0%E5%AD%90.docx" target="_blank">Word</a></td></tr>
     <tr><td>2</td><td><i>Togo</i> 2015 · <i>Distributions of phonon lifetimes in Brillouin zones</i>（Phys. Rev. B）</td><td>布里渊区声子寿命分布（官方[2]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9822-LLM%20Agent%E7%83%AD%E8%BE%93%E8%BF%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-22-Togo2015%E5%A3%B0%E5%AD%90%E5%AF%BF%E5%91%BD.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9822-LLM%20Agent%E7%83%AD%E8%BE%93%E8%BF%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-22-Togo2015%E5%A3%B0%E5%AD%90%E5%AF%BF%E5%91%BD.docx" target="_blank">Word</a></td></tr>
