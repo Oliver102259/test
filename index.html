@@ -195,6 +195,7 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
   <button class="tab-btn" data-tab="papers">文献分析</button>
   <button class="tab-btn" data-tab="fypw">毕设专项（王导）</button>
   <button class="tab-btn" data-tab="papersw">文献分析（王导）</button>
+  <button class="tab-btn" data-tab="coursesw">选课（王导）</button>
   <button class="tab-btn" data-tab="email">自荐邮件</button>
   <button class="tab-btn" data-tab="fypselect">选题分析</button>
 </div></nav>
@@ -670,6 +671,42 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
   <div class="note">🎯 <b>赛道开放版 7 志愿（终版 2026-08-19）</b>：① <b>50</b> 卤化物固态电解质合成（Ong）→ ② <b>23</b> 卤化物固态电解质界面层计算（Deng，与 50 同体系=实验/计算双叙事）→ ③ <b>24</b> Li₃PS₄ 离子传导计算（Deng）→ ④ <b>22</b> LLM Agent 热输运计算（Deng）→ ⑤ <b>39</b> 聚合物凝胶电解质（John Wang·院士锚点）→ ⑥ <b>47</b> MLIP 相稳定性（Ong）→ ⑦ <b>70</b> 普鲁士蓝钠电（商业锚点）。<br>✅ 已删除原保底项 11；前 4 个=固态电解质主线四连发，后 3 个=品牌/商业锚点。<br>💻 计算选题红利：无湿实验室依赖，HPC/GPU 学校提供，人在重庆可远程执行——执行地问题消失。热身清单：Python/Linux 2 周 → 读 Deng 组 JMCA 2025 MLIP 论文 → Materials Project 教程。</div>
 </section>
 
+<!-- ================= 选课（王导） ================= -->
+<section class="tab-panel" id="tab-coursesw">
+  <div class="tip">📚 <b>王导选课建议（AY2026-2027）</b>：分析步骤同「选课」页签（意义深度/个人匹配/毕设匹配/应用前景）。王导 5 志愿横跨 3 个赛道（Avsar 2D 器件 ×3、Ong 电解质、Blackwood 赝电容），选课逻辑以<b>器件工艺 + 表征 + 储能电化学</b>为主线。<b>推荐组合：MLE4207 + MLE4201 + MLE4210</b>（⚠️ 4201 与 4207 10 月时间重叠，需确认课表时段）。</div>
+
+  <h2 class="sec">课程对比总览（王导视角）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th>课程</th><th style="width:170px">授课教师</th><th style="width:140px">时间</th><th style="width:120px">考核</th><th style="width:70px">推荐</th></tr>
+    <tr><td><b>MLE4207</b> 微加工工艺<br><span style="color:var(--muted)">CMOS 全流程：光刻/热氧化/掺杂/薄膜沉积/刻蚀/互连</span></td><td>Jihang Yu + Di Zhu</td><td>10/9–10/26</td><td>期中40%+期末60%</td><td>⭐必选</td></tr>
+    <tr><td><b>MLE4201</b> 先进材料表征<br><span style="color:var(--muted)">SEM/TEM/XRD/XPS/AES/SIMS/IR/Raman</span></td><td>Qian He + Chen Jingsheng</td><td>10/9–1/1</td><td>期中50%+期末50%</td><td>⭐必选</td></tr>
+    <tr><td><b>MLE4210</b> 能量转换与存储材料<br><span style="color:var(--muted)">电化学→电池/超级电容/燃料电池/太阳能电池</span></td><td>Qing Wang + Daniel Blackwood（课题5 导师！）</td><td>3/22–3/30<br>4/12–4/20</td><td>期中50%+期末50%</td><td>✅推荐</td></tr>
+    <tr><td><b>MLE4217</b> 材料大数据应用<br><span style="color:var(--muted)">Python/DFT/ML/MLIP/Materials Project</span></td><td>Peichen Zhong + Zeyu Deng</td><td>11/9–11/27</td><td>测验25%+作业75%</td><td>◯按需</td></tr>
+    <tr><td><b>MLE4228</b> 机器人材料<br><span style="color:var(--muted)">软体机器人传感器/致动器</span></td><td>Chaobin He + Changsheng Wu</td><td>3/1–3/19</td><td>项目60%+期末40%</td><td>❌偏离</td></tr>
+  </table></div>
+  <p style="margin-top:6px;font-size:12.5px;color:var(--muted)">必修：GE4000 英文科技写作｜MLE4601 毕设｜GE4100 讲座（不计入 MLE 三选）。</p></div>
+
+  <h2 class="sec">匹配逻辑（王导版）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>4207（微加工·⭐）</b>：与我的选课结论相反——这门课对王导是<b>刚需</b>：Avsar 三个 2D 器件课题的全部工作都建立在器件制造语言上（光刻图形化、薄膜沉积、金属接触、退火工艺），CMOS 工艺全流程正是"器件从哪来"的底层知识；即使毕设器件由导师预制备，理解工艺才能读懂器件并设计退火/接触实验。</li>
+      <li><b>4201（表征·⭐）</b>：5 个课题全部需要：器件电学表征（转移/输出特性）、卤化物 XRD/SEM/EIS、硫化物 SEM/XRD——"看材料"基本功。</li>
+      <li><b>4210（储能·✅）</b>：Blackwood 课题5（赝电容/超级电容）的课程章节直接对口，且授课教师之一就是课题5 导师 Blackwood（MSE 副系主任）——上课即"拜山头"，提前刷脸对毕设带教有益。</li>
+      <li><b>4217（计算·◯）</b>：仅当王导最终主攻 Ong 课题4（液相合成中的计算辅助/文献数据）时有价值；对纯器件/电容课题可省。</li>
+      <li><b>4228（❌）</b>：软体机器人与 2D 器件/储能赛道无交集。</li>
+      <li>⚠️ <b>时间冲突</b>：4201（10/9–1/1）与 4207（10/9–26）重叠——两门必选课的课表时段必须向研究院确认（若冲突，4207 优先保留，4201 改期或换 4217）。</li>
+    </ul>
+  </div>
+
+  <div class="task-group" data-group="wang-course">
+    <h3>📋 王导选课行动清单<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="wc-1">向研究院确认 4201 与 4207 的课表时段是否冲突（两门都必选）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wc-2">与王导对齐毕设志愿结构（Avsar 选几个？是否走"3 赛道分散"）→ 决定 4217 是否选</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wc-3">确认前置豁免（4207/4210 需 MLE2105）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wc-4">按推荐组合提交选课：4207 + 4201 + 4210</label>
+  </div>
+</section>
+
 <!-- ================= 毕设专项（王导） ================= -->
 <section class="tab-panel" id="tab-fypw">
   <div class="tip">🎯 <b>王导毕设（2026-08-29 建）</b>：5 个课题来自《MSE311 毕业设计选题介绍 AY2026-2027》——Avsar 3 个（2D 器件）+ Ong 1 个（卤化物电解质液相合成）+ Blackwood 1 个（SILAR 硫化物赝电容）。文献库与精读报告见「文献分析（王导）」页签；PDF 归档于 <code>D:\NUS311RA\王导毕设文献\&lt;课题&gt;\</code>，已同步 GitHub 可异地访问。</div>
@@ -684,6 +721,16 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
     <tr><td><b>5</b></td><td><i>Transition Metal Sulphide Pseudocapacitors from SILAR</i>（P23-24）</td><td>Daniel J Blackwood</td><td>SILAR 法 Ni foam 上多金属硫化物赝电容：双/三金属协同效应（Ni/Co/Mn 或 Ni/Cu/Mo），与电沉积组对比</td><td>储能·赝电容</td></tr>
   </table></div>
   <p style="margin-top:6px;font-size:12.5px;color:var(--muted)">注：课题4 与你自己的课题50（Ong 卤化物SSE液相合成）完全同源——同一导师同一课题，两人可共享全部基础文献与部分精读报告。</p></div>
+
+  <h2 class="sec">🎯 选课题建议（Avsar 三选一思路）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>若 Avsar 组限选 1 个</b>：课题1（热退火）实验门槛最低——器件由导师提供，学生做"退火+电学表征+参数提取"，上手快、产出确定性最高；课题3（接触）物理最经典（接触电阻/费米钉扎是 2D 器件核心问题），文献基础好但分析要求更高；课题2（霍尔）物理最前沿但测量与数据分析难度最大。</li>
+      <li><b>组合建议</b>：若目标是"保底+科研体验"选课题1；若目标是"接触电阻/半导体物理叙事"选课题3；课题2 适合已有器件物理基础的学生。</li>
+      <li><b>课题4 与课题5 的对比</b>：课题4（Ong）导师品牌最硬、与你课题50 同源可互助，但纯实验（合成+表征）周期长；课题5（Blackwood）实验节奏快（SILAR+电化学测试），导师是 MSE 副系主任、文献里还有导师自己的 CV 诱导三金属氧化物工作（传承性强）。</li>
+      <li><b>志愿结构建议</b>：2D 器件（Avsar）与电池/电解质（Ong/Blackwood）是两个完全不同的赛道——若王导想"分散风险"建议 Avsar 选 1 个 + Ong 1 个 + Blackwood 1 个；若想"深耕一条线"则 3 个 Avsar 或 Avsar 2 + 电解质 1。</li>
+    </ul>
+  </div>
 
   <h2 class="sec">课题关键点速查</h2>
   <div class="card">
@@ -744,24 +791,27 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
     <tr><td>补充</td><td>Fang et al. <i>High Performance Single Layered WSe2 p-FETs with Chemically Doped Contacts</i>（arXiv:1206.4776, 2012）</td><td>化学掺杂接触的高性能单层 WSe₂ p-FET</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E7%8E%8B%E5%AF%BC%E6%AF%95%E8%AE%BE%E6%96%87%E7%8C%AE/%E7%8E%8B%E5%AF%BC%E8%AF%BE%E9%A2%983-WSe2%E9%AB%98%E5%8A%9F%E5%87%BD%E6%95%B0%E6%8E%A5%E8%A7%A6/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-%E8%AF%BE%E9%A2%983-Fang2012WSe2pFET.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E7%8E%8B%E5%AF%BC%E6%AF%95%E8%AE%BE%E6%96%87%E7%8C%AE/%E7%8E%8B%E5%AF%BC%E8%AF%BE%E9%A2%983-WSe2%E9%AB%98%E5%8A%9F%E5%87%BD%E6%95%B0%E6%8E%A5%E8%A7%A6/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-%E8%AF%BE%E9%A2%983-Fang2012WSe2pFET.docx" target="_blank">Word</a></td></tr>
   </table></div></div>
 
-  <h2 class="sec">课题4 · 卤化物SSE液相合成（Ong）｜与你课题50 同源</h2>
-  <div class="card"><div class="table-scroll"><table>
-    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
-    <tr><td>官方[1]</td><td>Asano et al. <i>Solid halide electrolytes with high lithium-ion conductivity for 4V-class bulk-type all-solid-state batteries</i>（Adv. Mater. 2018, 30, 1803075）</td><td>高锂离子电导卤化物电解质用于 4V 级全固态电池</td><td style="text-align:center">🔒</td><td>—</td></tr>
-    <tr><td>官方[2]</td><td>Li et al. <i>Water-mediated synthesis of a superionic halide solid electrolyte</i>（Angew. Chem. 2019, 58, 16427）</td><td>水介导合成超离子卤化物固态电解质</td><td style="text-align:center">🔒</td><td>—</td></tr>
-    <tr><td>官方[3]</td><td>Meyer et al. <i>The ammonium chloride route to anhydrous rare earth chlorides: YCl3</i>（Inorg. Synth. 1989, 25, 146）</td><td>氯化铵路线制备无水稀土氯化物（YCl₃）</td><td style="text-align:center">🔒</td><td>—</td></tr>
-    <tr><td>官方[4]</td><td><b>Wang et al. <i>A universal wet-chemistry synthesis of solid-state halide electrolytes for all-solid-state lithium-metal batteries</i>（Sci. Adv. 2021, 7, eabh1896）</b></td><td><b>卤化物固态电解质通用湿化学合成（课题4 核心）</b></td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E7%8E%8B%E5%AF%BC%E6%AF%95%E8%AE%BE%E6%96%87%E7%8C%AE/%E7%8E%8B%E5%AF%BC%E8%AF%BE%E9%A2%984-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-%E8%AF%BE%E9%A2%984-Wang2021%E6%B9%BF%E5%8C%96%E5%AD%A6%E5%90%88%E6%88%90.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E7%8E%8B%E5%AF%BC%E6%AF%95%E8%AE%BE%E6%96%87%E7%8C%AE/%E7%8E%8B%E5%AF%BC%E8%AF%BE%E9%A2%984-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-%E8%AF%BE%E9%A2%984-Wang2021%E6%B9%BF%E5%8C%96%E5%AD%A6%E5%90%88%E6%88%90.docx" target="_blank">Word</a></td></tr>
-    <tr><td>官方[5]</td><td>Liu et al. <i>High-performance Li3YCl3Br3 halide solid electrolyte synthesized using wet-chemistry route</i>（T. Nonferrous Met. Soc. China 2025, 35, 2341）</td><td>湿化学路线合成高性能 Li₃YCl₃Br₃ 卤化物电解质</td><td style="text-align:center">🔒</td><td>—</td></tr>
-    <tr><td>官方[6]</td><td>Gamo et al. <i>Liquid-phase synthesis of halide solid electrolytes for all-solid-state batteries using organic solvents</i>（Energy Environ. Mater. 2026, 9, e70184）</td><td>有机溶剂液相合成卤化物固态电解质</td><td style="text-align:center">🔒需手动下载</td><td>—</td></tr>
-    <tr><td>官方[7]</td><td>Schlem et al. <i>Mechanochemical synthesis: a tool to tune cation site disorder…</i>（Adv. Energy Mater. 2020, 10, 1903719）</td><td>机械化学合成调控阳离子位点无序（无序=快传导）</td><td style="text-align:center">🔒</td><td>—</td></tr>
-    <tr><td>共享</td><td><b>你课题50 的全部精读报告</b>（Wang2021 湿化学 / Li2019 水介导 / 热失控 / EIS 等）</td><td>课题50 与课题4 同源，直接复用</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Wang2021%E6%B0%AF%E5%8C%96%E7%89%A9SSE.html" target="_blank">见课题50</a></td></tr>
-  </table></div></div>
+  <h2 class="sec">课题4 · 卤化物SSE液相合成（Ong）＝你的课题50 全套共享（10 条）</h2>
+  <div class="card"><div class="table-scroll"><table class="lit-table">
+    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:220px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
+    <tr><td>1</td><td><i>Wang K. et al.</i> 2021 · <i>A cost-effective and humidity-tolerant chloride solid-state electrolyte</i>（Nat. Commun.）</td><td>低成本、耐湿氯化物固态电解质（官方[4]）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Wang2021%E6%B0%AF%E5%8C%96%E7%89%A9SSE.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Wang2021%E6%B0%AF%E5%8C%96%E7%89%A9SSE.docx" target="_blank">Word</a></td></tr>
+    <tr><td>2</td><td><i>Li Y. et al.</i> 2025 · <i>Decoupled Ion Transport via Triadic Molecular Synergy in Flame-Retardant Quasi-Solid Electrolytes for Safe Li Metal Batteries</i>（Adv. Energy Mater.）</td><td>阻燃准固态电解质：三元分子协同解耦离子传输</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Li2025%E9%98%BB%E7%87%83%E5%87%86%E5%9B%BA%E6%80%81.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Li2025%E9%98%BB%E7%87%83%E5%87%86%E5%9B%BA%E6%80%81.docx" target="_blank">Word</a></td></tr>
+    <tr><td>3</td><td><i>Lu X. et al.</i> 2023 · <i>Polymer-Based Solid-State Electrolytes for High-Energy-Density Lithium-Ion Batteries – Review</i>（Adv. Energy Mater.）</td><td>聚合物基固态电解质综述（共享）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-AEM2023%E7%BB%BC%E8%BF%B0.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-AEM2023%E7%BB%BC%E8%BF%B0.docx" target="_blank">Word</a></td></tr>
+    <tr><td>4</td><td><i>Li W. et al.</i> 2020 · <i>High-nickel layered oxide cathodes for lithium-based automotive batteries</i>（Nat. Energy）</td><td>面向车用锂电池的高镍层状氧化物正极</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Li2020%E9%AB%98%E9%95%8D%E6%AD%A3%E6%9E%81.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-Li2020%E9%AB%98%E9%95%8D%E6%AD%A3%E6%9E%81.docx" target="_blank">Word</a></td></tr>
+    <tr><td>5</td><td><i>Chen et al.</i> 2026 · <i>Thermal Runaway in Lithium-Ion Batteries: A Review of Mechanisms, Prediction Approaches, and Mitigation Strategies</i>（Batteries）</td><td>锂离子电池热失控机理、预测与缓解综述（共享）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-%E7%83%AD%E5%A4%B1%E6%8E%A7%E7%BB%BC%E8%BF%B0.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-%E7%83%AD%E5%A4%B1%E6%8E%A7%E7%BB%BC%E8%BF%B0.docx" target="_blank">Word</a></td></tr>
+    <tr><td>6</td><td><i>Lazanas et al.</i> 2023 · <i>Electrochemical Impedance Spectroscopy─A Tutorial</i>（ACS Meas. Sci. Au）</td><td>电化学阻抗谱（EIS）教程（共享）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-EIS%E6%95%99%E7%A8%8B.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-EIS%E6%95%99%E7%A8%8B.docx" target="_blank">Word</a></td></tr>
+    <tr><td>7</td><td>材料牛 · AEM 2023 综述中文导读（网页）</td><td>AEM 2023 综述中文导读</td><td style="text-align:center">🌐</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-%E7%BD%91%E9%A1%B5-%E6%9D%90%E6%96%99%E7%89%9B%E5%AF%BC%E8%AF%BB.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/00-%E5%85%B1%E4%BA%AB%E7%BB%BC%E8%BF%B0/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-00-%E7%BD%91%E9%A1%B5-%E6%9D%90%E6%96%99%E7%89%9B%E5%AF%BC%E8%AF%BB.docx" target="_blank">Word</a></td></tr>
+    <tr><td>8</td><td>NSTL 记录 · AEM 2025 阻燃准固态电解质论文（网页）</td><td>AEM 2025 论文记录</td><td style="text-align:center">🌐</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-%E7%BD%91%E9%A1%B5-NSTL%E8%AE%B0%E5%BD%95.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-%E7%BD%91%E9%A1%B5-NSTL%E8%AE%B0%E5%BD%95.docx" target="_blank">Word</a></td></tr>
+    <tr><td>9</td><td>SMM 分析 · 半固态固液电池储能商业化提速（网页）</td><td>半固态商业化分析</td><td style="text-align:center">🌐</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-%E7%BD%91%E9%A1%B5-SMM%E5%88%86%E6%9E%90.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-%E7%BD%91%E9%A1%B5-SMM%E5%88%86%E6%9E%90.docx" target="_blank">Word</a></td></tr>
+    <tr><td>10</td><td>高工锂电峰会 · 固态电池量产（网页）</td><td>固态电池量产报道</td><td style="text-align:center">🌐</td><td>📖<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-%E7%BD%91%E9%A1%B5-%E9%AB%98%E5%B7%A5%E9%94%82%E7%94%B5.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E5%90%84%E9%80%89%E9%A2%98%E6%96%87%E7%8C%AE%E5%88%86%E6%9E%90/%E8%AF%BE%E9%A2%9850-%E5%8D%A4%E5%8C%96%E7%89%A9SSE%E6%B6%B2%E7%9B%B8%E5%90%88%E6%88%90/%E6%96%87%E7%8C%AE%E7%B2%BE%E8%AF%BB-50-%E7%BD%91%E9%A1%B5-%E9%AB%98%E5%B7%A5%E9%94%82%E7%94%B5.docx" target="_blank">Word</a></td></tr>
+  </table></div>
+  <p style="margin-top:6px;font-size:12px;color:var(--muted)">⬆️ 本表为课题50（同导师同课题）全套内容直接共享：6 个 PDF 已复制到 <code>王导毕设文献\王导课题4-卤化物SSE液相合成\</code>（前缀"共享自课题50-"），报告链接指向你课题50 的精读报告。<br>📋 课题4 手册官方引用 [1]-[7] 补充：Asano 2018 Adv. Mater.（🔒订阅）｜Li 2019 Angew 水介导（🔒）｜Meyer 1989 NH₄Cl 路线（🔒）｜[4] Wang2021 Sci. Adv.＝本表第 1 行（✅已精读，500°C 峰值 0.345 mS/cm）｜Liu 2025 Li₃YCl₃Br₃（🔒）｜Gamo 2026 EEM 有机溶剂（🔒需手动下载）｜Schlem 2020 无序-电导（🔒，与 550°C 电导率下降直接相关）。</p></div></div></div>
 
   <h2 class="sec">课题5 · SILAR 硫化物赝电容（Blackwood）</h2>
   <div class="card"><div class="table-scroll"><table>
     <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
     <tr><td>官方[1]</td><td>Ngala et al. <i>The synthesis, characterization and electrochemical behavior of the layered LiNi0.4Mn0.4Co0.2O2 compound</i>（J. Mater. Chem. 2004, 14, 214）</td><td>层状 LiNi₀.₄Mn₀.₄Co₀.₂O₂ 的合成表征与电化学行为</td><td style="text-align:center">🔒</td><td>—</td></tr>
-    <tr><td>官方[2]</td><td>Gui et al. <i>Facile Cyclic Voltammetric-Induced Trimetallic Oxides with Shear-Wall Structure…</i>（Energy Technol. 2021, 9, 2001136）</td><td>CV 诱导三金属氧化物剪切壁结构赝电容</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[2]</td><td>Gui et al. <i>Facile Cyclic Voltammetric-Induced Trimetallic Oxides with Shear-Wall Structure…</i>（Energy Technol. 2021, 9, 2001136）</td><td>CV 诱导三金属氧化物剪切壁结构赝电容（⚠️ <b>作者含课题5 导师 Blackwood——导师组文献</b>）</td><td style="text-align:center">🔒</td><td>—</td></tr>
     <tr><td>官方[3]</td><td>Kumbhar et al. <i>Modified chemical synthesis of MnS nanoclusters on nickel foam…</i>（RSC Adv. 2017, 7, 16348, DOI 10.1039/c7ra00772h）</td><td>Ni 泡沫上 MnS 纳米簇改性化学合成（SILAR 原型）</td><td style="text-align:center">🔒需手动下载</td><td>—</td></tr>
     <tr><td>速览</td><td>课题5 速览与精读路线图（基于手册描述撰写）</td><td>课题技术要点拆解 + 文献精读顺序</td><td style="text-align:center">—</td><td>📖<a href="https://oliver102259.github.io/test/%E7%8E%8B%E5%AF%BC%E6%AF%95%E8%AE%BE%E6%96%87%E7%8C%AE/%E7%8E%8B%E5%AF%BC%E8%AF%BE%E9%A2%985-SILAR%E7%A1%AB%E5%8C%96%E7%89%A9%E8%B5%9D%E7%94%B5%E5%AE%B9/%E8%AF%BE%E9%A2%985-%E9%80%9F%E8%A7%88%E4%B8%8E%E7%B2%BE%E8%AF%BB%E8%B7%AF%E7%BA%BF%E5%9B%BE.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/%E7%8E%8B%E5%AF%BC%E6%AF%95%E8%AE%BE%E6%96%87%E7%8C%AE/%E7%8E%8B%E5%AF%BC%E8%AF%BE%E9%A2%985-SILAR%E7%A1%AB%E5%8C%96%E7%89%A9%E8%B5%9D%E7%94%B5%E5%AE%B9/%E8%AF%BE%E9%A2%985-%E9%80%9F%E8%A7%88%E4%B8%8E%E7%B2%BE%E8%AF%BB%E8%B7%AF%E7%BA%BF%E5%9B%BE.docx" target="_blank">Word</a></td></tr>
   </table></div>
