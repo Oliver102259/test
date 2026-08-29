@@ -193,6 +193,8 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
   <button class="tab-btn" data-tab="amm">AMM 调研</button>
   <button class="tab-btn" data-tab="fyp">毕设专项</button>
   <button class="tab-btn" data-tab="papers">文献分析</button>
+  <button class="tab-btn" data-tab="fypw">毕设专项（王导）</button>
+  <button class="tab-btn" data-tab="papersw">文献分析（王导）</button>
   <button class="tab-btn" data-tab="email">自荐邮件</button>
   <button class="tab-btn" data-tab="fypselect">选题分析</button>
 </div></nav>
@@ -666,6 +668,106 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
   </div>
 
   <div class="note">🎯 <b>赛道开放版 7 志愿（终版 2026-08-19）</b>：① <b>50</b> 卤化物固态电解质合成（Ong）→ ② <b>23</b> 卤化物固态电解质界面层计算（Deng，与 50 同体系=实验/计算双叙事）→ ③ <b>24</b> Li₃PS₄ 离子传导计算（Deng）→ ④ <b>22</b> LLM Agent 热输运计算（Deng）→ ⑤ <b>39</b> 聚合物凝胶电解质（John Wang·院士锚点）→ ⑥ <b>47</b> MLIP 相稳定性（Ong）→ ⑦ <b>70</b> 普鲁士蓝钠电（商业锚点）。<br>✅ 已删除原保底项 11；前 4 个=固态电解质主线四连发，后 3 个=品牌/商业锚点。<br>💻 计算选题红利：无湿实验室依赖，HPC/GPU 学校提供，人在重庆可远程执行——执行地问题消失。热身清单：Python/Linux 2 周 → 读 Deng 组 JMCA 2025 MLIP 论文 → Materials Project 教程。</div>
+</section>
+
+<!-- ================= 毕设专项（王导） ================= -->
+<section class="tab-panel" id="tab-fypw">
+  <div class="tip">🎯 <b>王导毕设（2026-08-29 建）</b>：5 个课题来自《MSE311 毕业设计选题介绍 AY2026-2027》——Avsar 3 个（2D 器件）+ Ong 1 个（卤化物电解质液相合成）+ Blackwood 1 个（SILAR 硫化物赝电容）。文献库与精读报告见「文献分析（王导）」页签；PDF 归档于 <code>D:\NUS311RA\王导毕设文献\&lt;课题&gt;\</code>，已同步 GitHub 可异地访问。</div>
+
+  <h2 class="sec">课题定位（5 个课题一览）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:44px">#</th><th>课题（手册原文）</th><th style="width:130px">导师</th><th style="width:170px">核心内容</th><th style="width:150px">主线</th></tr>
+    <tr><td><b>1</b></td><td><i>Thermal Annealing of PtSe₂ Transistors for High-Performance Electronics</i>（P7-8）</td><td>Ahmet Avsar</td><td>热退火优化 PtSe₂ 晶体管：阈值电压/迁移率/亚阈值摆幅/开关比/迟滞/接触电阻；器件导师提供</td><td>2D 器件·工艺优化</td></tr>
+    <tr><td><b>2</b></td><td><i>Hall Effect Investigation of Impurity-Band Transport in Two-Dimensional Semiconductors</i>（P9-10）</td><td>Ahmet Avsar</td><td>过渡金属掺杂 PtSe₂ 霍尔测量：载流子浓度/霍尔迁移率/电导率随栅压磁场演化，探杂质带输运</td><td>2D 器件·输运物理</td></tr>
+    <tr><td><b>3</b></td><td><i>High-Work-Function Contacts for Efficient p-Type WSe₂ Transistors</i>（P11-12）</td><td>Ahmet Avsar</td><td>预图形化钯电极（高功函数）WSe₂ p 型晶体管；TLM 传输线法提取接触电阻/沟道方阻</td><td>2D 器件·接触工程</td></tr>
+    <tr><td><b>4</b></td><td><i>Liquid Synthesis of Halide Solid-State Electrolyte</i>（P123-131）</td><td><b>Shyue Ping Ong</b></td><td>液相合成 Li₃MCl₆（M=Y/In/Sc/Er）：NH₄Cl 水溶液 vs 干燥非质子溶剂两条路线；烧结温度/保温时间系统比较</td><td>固态电解质·液相合成</td></tr>
+    <tr><td><b>5</b></td><td><i>Transition Metal Sulphide Pseudocapacitors from SILAR</i>（P23-24）</td><td>Daniel J Blackwood</td><td>SILAR 法 Ni foam 上多金属硫化物赝电容：双/三金属协同效应（Ni/Co/Mn 或 Ni/Cu/Mo），与电沉积组对比</td><td>储能·赝电容</td></tr>
+  </table></div>
+  <p style="margin-top:6px;font-size:12.5px;color:var(--muted)">注：课题4 与你自己的课题50（Ong 卤化物SSE液相合成）完全同源——同一导师同一课题，两人可共享全部基础文献与部分精读报告。</p></div>
+
+  <h2 class="sec">课题关键点速查</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>课题1</b>：PtSe₂ 理论迁移率居 2D 半导体前列；退火=去表面残留+改善金属-半导体界面+减缺陷。关键参数：退火温度/时长 vs 阈值电压、场效应迁移率、SS、开关比、迟滞、接触电阻。缺陷引入还可能影响磁性（Avsar 2019 Nat Nano 线索）。</li>
+      <li><b>课题2</b>：杂质带=掺杂原子局域态重叠形成的新导带。方法=霍尔电阻+纵向电阻随栅压/磁场扫描 → 载流子浓度/霍尔迁移率/电导率/方阻 → 判断带边附近是否出现杂质带输运特征。</li>
+      <li><b>课题3</b>：WSe₂ 是 p 型沟道候选；金属-半导体接触电阻与费米钉扎是核心障碍；Pd 功函数高→空穴注入效率；倒置结构消除钉扎；TLM 变沟道长度法提取接触电阻。</li>
+      <li><b>课题4</b>：Y³⁺ 亲氧→水解产 YOCl。路线A：NH₄Cl 水溶液（(NH₄)₃[YCl₆] 屏蔽，烧结升华）；路线B：干吡啶/乙腈（无水）。张力：高温除 LiCl vs 高温毁无序（无序=快离子传导）。真空烧结 200-550°C。</li>
+      <li><b>课题5</b>：SILAR=浸入阳离子溶液→水洗→浸入阴离子溶液→水洗循环；多金属=分溶液依次 vs 混合溶液；协同效应=多金属是否优于单金属；与电沉积法横向对比。</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">能力准备（按课题）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:44px">课题</th><th>需要的基础</th><th>推荐准备</th></tr>
+    <tr><td>1/2/3</td><td>半导体物理（能带/载流子输运/霍尔效应）、器件表征（转移/输出特性、TLM）</td><td>🎬 半导体物理基础 ｜ 文献：Avsar 组近年工作（PtSe₂ 输运/磁性）</td></tr>
+    <tr><td>4</td><td>固态电解质（离子传导/缺陷化学）、无机合成（无水操作/手套箱）、EIS 阻抗</td><td>🎬 锂电原理 ｜ 📄 共享：你课题50 的全部精读报告（Wang2021 湿化学/Schlem 无序等）</td></tr>
+    <tr><td>5</td><td>电化学（CV/恒流充放电/EIS）、薄膜沉积（SILAR）、赝电容机理</td><td>🎬 电化学（胡吉明）｜📄 EIS 教程（共享）</td></tr>
+  </table></div></div>
+
+  <div class="task-group" data-group="wang-prep">
+    <h3>📋 王导毕设行动清单<span class="head-right"><span class="bar"><span class="fill"></span></span><span class="pct">0/0</span></span></h3>
+    <label class="task"><input type="checkbox" class="task" data-id="wp-1">与王导确认 5 课题的志愿顺序与名额（Avsar 组 3 个是否限选 1 个）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wp-2">确认课题4 与你的课题50 是否同课题同导师（共享文献与答疑）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wp-3">下载缺漏文献（课题4：EEM 2026；课题5：RSC Adv 2017——需浏览器手动下载）</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wp-4">按课题5 精读路线图完成三篇官方文献精读</label>
+    <label class="task"><input type="checkbox" class="task" data-id="wp-5">9/1 班会问清 Avsar/Blackwood 组带教安排（博士生/RA、执行地、设备权限）</label>
+  </div>
+</section>
+
+<!-- ================= 文献分析（王导） ================= -->
+<section class="tab-panel" id="tab-papersw">
+  <div class="tip">📚 <b>王导文献库（2026-08-29 建）</b>：5 课题的官方参考文献 + 已下载 PDF + 精读报告。PDF 与报告存放在 <b>D:\NUS311RA\王导毕设文献\&lt;课题&gt;\</b> 并已同步 GitHub（链接见下，网页版/Word 均可异地访问）。✅=有 PDF｜🔒=缺 PDF（需订阅/手动下载）｜📖=精读报告。</div>
+
+  <h2 class="sec">课题1 · PtSe₂ 晶体管退火（Avsar）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
+    <tr><td>官方[1]</td><td>Al Mejamai et al. <i>Metal-insulator transition at low densities in a two-dimensional low-bandgap semiconductor</i>（Nat. Commun. 2026, DOI 10.1038/s41467-026-74097-7）</td><td>二维低带隙半导体低密度金属-绝缘体转变</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题1-PtSe2晶体管退火/文献精读-课题1-AlMejamai2026金属绝缘体转变.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题1-PtSe2晶体管退火/文献精读-课题1-AlMejamai2026金属绝缘体转变.docx" target="_blank">Word</a></td></tr>
+    <tr><td>官方[2]</td><td>Ghosh et al. <i>Electrical Bandgap Evolution and Carrier-Induced Transport Regimes in Ultrathin PtSe2</i>（Nano Lett. 2026）</td><td>超薄 PtSe₂ 电学带隙演化与载流子诱导输运区</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[3]</td><td>Avsar et al. <i>Defect induced, layer-modulated magnetism in ultra-thin metallic PtSe2</i>（Nat. Nanotechnol. 2019, 14, 674）</td><td>缺陷诱导、层调制的超薄金属性 PtSe₂ 磁性</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>补充</td><td>Avsar et al. <i>Probing magnetism in atomically thin semiconducting PtSe2</i>（Nat. Commun. 2020, DOI 10.1038/s41467-020-18521-6）</td><td>原子薄半导体性 PtSe₂ 的磁性探测</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题1-PtSe2晶体管退火/文献精读-课题1-Avsar2020PtSe2磁性.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题1-PtSe2晶体管退火/文献精读-课题1-Avsar2020PtSe2磁性.docx" target="_blank">Word</a></td></tr>
+  </table></div></div>
+
+  <h2 class="sec">课题2 · 霍尔杂质带输运（Avsar）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
+    <tr><td>官方[1]</td><td>Zhang et al. <i>Doping-Modulated Semiconductor-to-Metal Transformation in a Low-Band-Gap Two-Dimensional Material</i>（ACS Nano 2026, 20, 9278, DOI 10.1021/acsnano.5c20066）</td><td>掺杂调控低带隙二维材料半导体-金属转变</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[2]</td><td>Avsar et al. <i>Defect induced, layer-modulated magnetism in ultra-thin metallic PtSe2</i>（Nat. Nanotechnol. 2019）</td><td>缺陷诱导层调制 PtSe₂ 磁性（同课题1[3]）</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>补充</td><td>Al Mejamai et al. 2026 <i>Metal-insulator transition…</i>（Nat. Commun.）</td><td>金属-绝缘体转变（霍尔/载流子浓度方法核心参考）</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题2-霍尔杂质带输运/文献精读-课题2-AlMejamai2026金属绝缘体转变.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题2-霍尔杂质带输运/文献精读-课题2-AlMejamai2026金属绝缘体转变.docx" target="_blank">Word</a></td></tr>
+  </table></div></div>
+
+  <h2 class="sec">课题3 · WSe₂ 高功函数接触（Avsar）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
+    <tr><td>官方[1]</td><td>Y. Wang et al. <i>P-type electrical contacts for 2D transition-metal dichalcogenides</i>（Nature 2022, 610, 61）</td><td>二维过渡金属硫族化合物的 p 型电接触</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[2]</td><td>Y. Wang et al. <i>Making clean electrical contacts on 2D transition metal dichalcogenides</i>（Nat. Rev. Phys. 2022, 4, 101）</td><td>在 2D 过渡金属硫族化合物上制作干净电接触</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>补充</td><td><i>Fermi Level Depinning in Two-Dimensional Materials Using a Fluorinated Bilayer Graphene Buffer</i>（arXiv:2208.01351）</td><td>氟化双层石墨烯缓冲层实现 2D 材料费米能级去钉扎</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题3-WSe2高功函数接触/文献精读-课题3-FermiDepinning2022去钉扎.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题3-WSe2高功函数接触/文献精读-课题3-FermiDepinning2022去钉扎.docx" target="_blank">Word</a></td></tr>
+    <tr><td>补充</td><td>Fang et al. <i>High Performance Single Layered WSe2 p-FETs with Chemically Doped Contacts</i>（arXiv:1206.4776, 2012）</td><td>化学掺杂接触的高性能单层 WSe₂ p-FET</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题3-WSe2高功函数接触/文献精读-课题3-Fang2012WSe2pFET.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题3-WSe2高功函数接触/文献精读-课题3-Fang2012WSe2pFET.docx" target="_blank">Word</a></td></tr>
+  </table></div></div>
+
+  <h2 class="sec">课题4 · 卤化物SSE液相合成（Ong）｜与你课题50 同源</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
+    <tr><td>官方[1]</td><td>Asano et al. <i>Solid halide electrolytes with high lithium-ion conductivity for 4V-class bulk-type all-solid-state batteries</i>（Adv. Mater. 2018, 30, 1803075）</td><td>高锂离子电导卤化物电解质用于 4V 级全固态电池</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[2]</td><td>Li et al. <i>Water-mediated synthesis of a superionic halide solid electrolyte</i>（Angew. Chem. 2019, 58, 16427）</td><td>水介导合成超离子卤化物固态电解质</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[3]</td><td>Meyer et al. <i>The ammonium chloride route to anhydrous rare earth chlorides: YCl3</i>（Inorg. Synth. 1989, 25, 146）</td><td>氯化铵路线制备无水稀土氯化物（YCl₃）</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[4]</td><td><b>Wang et al. <i>A universal wet-chemistry synthesis of solid-state halide electrolytes for all-solid-state lithium-metal batteries</i>（Sci. Adv. 2021, 7, eabh1896）</b></td><td><b>卤化物固态电解质通用湿化学合成（课题4 核心）</b></td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题4-卤化物SSE液相合成/文献精读-课题4-Wang2021湿化学合成.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题4-卤化物SSE液相合成/文献精读-课题4-Wang2021湿化学合成.docx" target="_blank">Word</a></td></tr>
+    <tr><td>官方[5]</td><td>Liu et al. <i>High-performance Li3YCl3Br3 halide solid electrolyte synthesized using wet-chemistry route</i>（T. Nonferrous Met. Soc. China 2025, 35, 2341）</td><td>湿化学路线合成高性能 Li₃YCl₃Br₃ 卤化物电解质</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[6]</td><td>Gamo et al. <i>Liquid-phase synthesis of halide solid electrolytes for all-solid-state batteries using organic solvents</i>（Energy Environ. Mater. 2026, 9, e70184）</td><td>有机溶剂液相合成卤化物固态电解质</td><td style="text-align:center">🔒需手动下载</td><td>—</td></tr>
+    <tr><td>官方[7]</td><td>Schlem et al. <i>Mechanochemical synthesis: a tool to tune cation site disorder…</i>（Adv. Energy Mater. 2020, 10, 1903719）</td><td>机械化学合成调控阳离子位点无序（无序=快传导）</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>共享</td><td><b>你课题50 的全部精读报告</b>（Wang2021 湿化学 / Li2019 水介导 / 热失控 / EIS 等）</td><td>课题50 与课题4 同源，直接复用</td><td style="text-align:center">✅</td><td>📖<a href="https://oliver102259.github.io/test/各选题文献分析/课题50-卤化物SSE液相合成/文献精读-50-Wang2021氯化物SSE.html" target="_blank">见课题50</a></td></tr>
+  </table></div></div>
+
+  <h2 class="sec">课题5 · SILAR 硫化物赝电容（Blackwood）</h2>
+  <div class="card"><div class="table-scroll"><table>
+    <tr><th style="width:40px">#</th><th>文献（英文）</th><th style="width:200px">中文名</th><th style="width:44px">PDF</th><th style="width:150px">报告</th></tr>
+    <tr><td>官方[1]</td><td>Ngala et al. <i>The synthesis, characterization and electrochemical behavior of the layered LiNi0.4Mn0.4Co0.2O2 compound</i>（J. Mater. Chem. 2004, 14, 214）</td><td>层状 LiNi₀.₄Mn₀.₄Co₀.₂O₂ 的合成表征与电化学行为</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[2]</td><td>Gui et al. <i>Facile Cyclic Voltammetric-Induced Trimetallic Oxides with Shear-Wall Structure…</i>（Energy Technol. 2021, 9, 2001136）</td><td>CV 诱导三金属氧化物剪切壁结构赝电容</td><td style="text-align:center">🔒</td><td>—</td></tr>
+    <tr><td>官方[3]</td><td>Kumbhar et al. <i>Modified chemical synthesis of MnS nanoclusters on nickel foam…</i>（RSC Adv. 2017, 7, 16348, DOI 10.1039/c7ra00772h）</td><td>Ni 泡沫上 MnS 纳米簇改性化学合成（SILAR 原型）</td><td style="text-align:center">🔒需手动下载</td><td>—</td></tr>
+    <tr><td>速览</td><td>课题5 速览与精读路线图（基于手册描述撰写）</td><td>课题技术要点拆解 + 文献精读顺序</td><td style="text-align:center">—</td><td>📖<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题5-SILAR硫化物赝电容/课题5-速览与精读路线图.html" target="_blank">网页</a>｜<a href="https://oliver102259.github.io/test/王导毕设文献/王导课题5-SILAR硫化物赝电容/课题5-速览与精读路线图.docx" target="_blank">Word</a></td></tr>
+  </table></div>
+  <p style="margin-top:6px;font-size:12.5px;color:var(--muted)">🔒 标注"需手动下载"的 2 篇（EEM 2026 / RSC Adv 2017）被出版商反爬拦截，用浏览器打开 DOI 链接即可下载，放入对应课题文件夹后告诉我，我再补精读报告与链接。</p></div>
+
+  <div class="note">🔁 <b>维护说明</b>：王导文献与报告全部在 <code>D:\NUS311RA\王导毕设文献\</code> 按课题归档，通过 <code>文献分析流水线.sh --push</code> 同步 GitHub（异地可访问）。新增文献 → 下载 PDF 放入对应课题文件夹 → 精读写报告（命名 <code>文献精读-课题N-短名.md</code>）→ 跑流水线 → 本专栏加行。</div>
 </section>
 
 <!-- ================= 文献分析 ================= -->
