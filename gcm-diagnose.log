@@ -1,0 +1,206 @@
+﻿Diagnose log at 2026-09-05T00:30:22Z
+
+AppPath: C:\开发前置\GIT\Git\mingw64\bin\git-credential-manager.exe
+InstallDir: C:\开发前置\GIT\Git\mingw64\bin\
+Version: 2.9.0+194ba290ce533465310d50f811684ab180536ae7
+
+------------
+Diagnostic: Environment
+Skipped: False
+Success: True
+Exception: None
+Log:
+OSType: Windows
+OSVersion: 10.0 (build 26200)
+Reading environment variables... OK
+ Variables:
+AWP_LOCALE261=zh
+P_SCHEMA=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\AISOL\CADIntegration\Parasolid\PSchema
+MSYSTEM=MINGW64
+ProgramW6432=C:\Program Files
+CRX_PATH_2025_x64=D:\Nicole\CRX\
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+ANSYSEM_ROOT261=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\AnsysEM
+ANSYSLMD_LICENSE_FILE=1055@localhost
+ICEMCFD_SYSDIR=win64_amd
+PROCESSOR_ARCHITECTURE=AMD64
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW
+LLVM_LINKER_PATH=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\CRTech\Shared64\lld-link.exe
+PUBLIC=C:\Users\Public
+USERPROFILE=C:\Users\Victor
+PROCESSOR_REVISION=b701
+SoS_install_dir=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\optiSLang\sos\
+FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer
+FPS_BROWSER_USER_PROFILE_STRING=Default
+LOGONSERVER=\\YYPL-VICTOR
+CADOE_LIBDIR261=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\CommonFiles\Language\zh
+USERNAME=Victor
+SystemRoot=C:\WINDOWS
+SESSIONNAME=Console
+EFC_13664_4126798990=1
+GIT_EXEC_PATH=C:/开发前置/GIT/Git/mingw64/libexec/git-core
+TERM=xterm-256color
+EFC_13664_1592913036=1
+SIMPLORER_HOME=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\AnsysEM
+TEMP=C:\Users\Victor\AppData\Local\Temp
+OneDrive=C:\Users\Victor\OneDrive
+USERDOMAIN_ROAMINGPROFILE=YYPL-VICTOR
+CommonProgramFiles=C:\Program Files\Common Files
+ANSYSLIC_DIR=C:\Program Files\ANSYS Inc\Shared Files\Licensing
+ZES_ENABLE_SYSMAN=1
+ANSYS261_DIR=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\ANSYS
+AWP_ROOT261=D:\ANSYSINSTALLNEW\ANSYS Inc\v261
+OnlineServices=Online Services
+ProgramData=C:\ProgramData
+ANS_ENABLE_ARTEMIS_ST=1
+HOMEPATH=\Users\Victor
+IGCCSVC_DB=AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAApXUU8StzHkyABVrLRIC9OQQAAAACAAAAAAAQZgAAAAEAACAAAACECyaHwvxHTQBWKbelFAI15Ya4bIttT6he1uc81Ekl2wAAAAAOgAAAAAIAACAAAACrASG/E2kvlYuFV37xf0s/kvkXGu1LoguE7+UDQ69Yd2AAAAC/HkJO0KY4Hs/ZKoTpiIJ4JIQh9pBNvsXHfCUtb33Lyo+4xHEFuhkxeycwHZV9uV+DVzIrCdIxBZNCvCMiE11rFP8mhKKsXYRBpFXsBVY8vvBTcL/POnPWsrMu5qATdNZAAAAAuemymTeFbi+kRY71feEfMlnGvYE6RC3HOK5hwEsXZfBZKvDFIqQP/A9zmS4AW5nvrDjPyAkXeKfNDdoj61JGgA==
+SIWAVE_INSTALL_DIR=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\AnsysEM
+ICEMCFD_ROOT261=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\icemcfd
+EFC_13664_2283032206=1
+CommonProgramW6432=C:\Program Files\Common Files
+EFC_13664_3789132940=1
+TMP=C:\Users\Victor\AppData\Local\Temp
+SoS_debug_exe=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\optiSLang\sos\sos_console.exe
+ProgramFiles(x86)=C:\Program Files (x86)
+EFC_13664_2775293581=1
+PLINK_PROTOCOL=ssh
+Path=C:/开发前置/GIT/Git/mingw64/libexec/git-core;C:\开发前置\GIT\Git\mingw64\bin;C:\开发前置\GIT\Git\usr\bin;C:\Users\Victor\bin;C:\Program Files\WindowsApps\MicrosoftCorporationII.WindowsSubsystemForLinux_2.7.11.0_x64__8wekyb3d8bbwe;C:\Program Files\Common Files\Oracle\Java\javapath;D:\python lesson\python\Scripts\;D:\python lesson\python\;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Program Files\HP\OMEN-Broadcast\Common;C:\华理云;;%;ystemRoot%\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\NVIDIA Corporation\NVIDIA App\NvDLISR;发前置\Nodejs\;;;;:\开发前置\GIT\Git\cmd;;;C;\开发前置\GIT\Git\cmd;;;C:\开发前置\GIT\Git\cmd;C:\Program Files\HZVPN\cli;C:\Program Files (x86)\Tencent\微信web开发者工具;C:\Program Files\GitHub CLI\;C:\开发前置\Nodejs\;C:\Users\Victor\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\Victor\AppData\Local\Programs\Python\Python312\;C:\Users\Victor\AppData\Local\Microsoft\WindowsApps;;D:\python lesson\pycharm\PyCharm 2023.3.2\bin;C:\texlive\2025\bin\windows;C:\开发前置\Vscode\Microsoft VS Code\bin;C:\Users\Victor\AppData\Roaming\npm
+LSTC_LICENSE=Ansys
+DriverData=C:\Windows\System32\Drivers\DriverData
+HOMEDRIVE=C:
+windir=C:\WINDOWS
+GIT_TRACE2_PARENT_SID=d20e2920-c196-483a-be35-ed6c1c6809e7
+SystemDrive=C:
+NUMBER_OF_PROCESSORS=32
+OS=Windows_NT
+platformcode=M7
+ProgramFiles=C:\Program Files
+ComSpec=C:\WINDOWS\system32\cmd.exe
+EFC_13664_1262719628=1
+HOME=C:\Users\Victor
+PSModulePath=C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+ALLUSERSPROFILE=C:\ProgramData
+PROMPT=$P$G
+TMPDIR=C:\Users\Victor\AppData\Local\Temp
+APPDATA=C:\Users\Victor\AppData\Roaming
+USERDOMAIN=YYPL-VICTOR
+COMPUTERNAME=YYPL-VICTOR
+LC_CTYPE=C.UTF-8
+LOCALAPPDATA=C:\Users\Victor\AppData\Local
+PyCharm=D:\python lesson\pycharm\PyCharm 2023.3.2\bin;
+SoS_exe=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\optiSLang\sos\sos.exe
+CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files
+COLORTERM=truecolor
+PHX_JRE_HOME=D:\ANSYSINSTALLNEW\ANSYS Inc\v261\tp\openjre\21
+PROCESSOR_LEVEL=6
+RegionCode=APJ
+
+
+------------
+Diagnostic: File system
+Skipped: False
+Success: True
+Exception: None
+Log:
+Temporary directory is 'C:\Users\Victor\AppData\Local\Temp\'...
+Checking basic file I/O...
+Writing to temporary file 'C:\Users\Victor\AppData\Local\Temp\713148d894cc8cc2b1c9b341'... OK
+Reading from temporary file 'C:\Users\Victor\AppData\Local\Temp\713148d894cc8cc2b1c9b341'... OK
+Deleting temporary file 'C:\Users\Victor\AppData\Local\Temp\713148d894cc8cc2b1c9b341'... OK
+Testing IFileSystem instance...
+UserHomePath: C:\Users\Victor
+UserDataDirectoryPath: C:\Users\Victor\.gcm
+GetCurrentDirectory(): D:\NUS311RA\.gh-sync
+
+------------
+Diagnostic: Networking
+Skipped: False
+Success: True
+Exception: None
+Log:
+Checking networking and HTTP stack...
+Creating HTTP client... OK
+IsNetworkAvailable: True
+Sending HEAD request to http://example.com... OK
+Sending HEAD request to https://example.com... OK
+Acquiring free TCP port... OK
+Testing local HTTP loopback connections...
+Creating new HTTP listener for http://localhost:53851/... OK
+Waiting for loopback connection... OK
+Writing response... OK
+Waiting for response data... OK
+Loopback connection data OK
+
+------------
+Diagnostic: Git
+Skipped: False
+Success: True
+Exception: None
+Log:
+Getting Git version... OK
+Git version is '2.55.0.windows.3'
+Locating current repository...Git repository at 'D:/NUS311RA/.gh-sync/.git'
+ OK
+Listing all Git configuration... OK
+Git configuration:
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	diff.astextplain.textconv=astextplain
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	filter.lfs.clean=git-lfs clean -- %f
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	filter.lfs.smudge=git-lfs smudge -- %f
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	filter.lfs.process=git-lfs filter-process
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	filter.lfs.required=true
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	http.sslbackend=schannel
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	core.autocrlf=true
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	core.fscache=true
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	core.symlinks=false
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	pull.rebase=false
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	credential.helper=manager
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	credential.https://dev.azure.com.usehttppath=true
+file:"C:/\345\274\200\345\217\221\345\211\215\347\275\256/GIT/Git/etc/gitconfig"	init.defaultbranch=master
+file:C:/Users/Victor/.gitconfig	user.email=3177595618@qq.com
+file:C:/Users/Victor/.gitconfig	user.name=Oliver102259
+file:.git/config	core.repositoryformatversion=0
+file:.git/config	core.filemode=false
+file:.git/config	core.bare=false
+file:.git/config	core.logallrefupdates=true
+file:.git/config	core.ignorecase=true
+file:.git/config	remote.origin.url=https://github.com/Oliver102259/test.git
+file:.git/config	remote.origin.fetch=+refs/heads/main:refs/remotes/origin/main
+file:.git/config	branch.main.remote=origin
+file:.git/config	branch.main.merge=refs/heads/main
+
+
+------------
+Diagnostic: Credential storage
+Skipped: False
+Success: True
+Exception: None
+Log:
+ICredentialStore instance is of type: CredentialStore
+Writing test credential... OK
+Reading test credential... OK
+Deleting test credential... OK
+
+------------
+Diagnostic: Microsoft authentication (AAD/MSA)
+Skipped: False
+Success: True
+Exception: None
+Log:
+Broker is not enabled.
+Gathering MSAL token cache data... OK
+CacheDirectory: C:\Users\Victor\AppData\Local\.IdentityService
+CacheFileName: msal.cache
+CacheFilePath: C:\Users\Victor\AppData\Local\.IdentityService\msal.cache
+Creating cache helper... OK
+Verifying MSAL token cache persistence... OK
+
+------------
+Diagnostic: GitHub API
+Skipped: False
+Success: True
+Exception: None
+Log:
+Using 'https://github.com/' as API target.
+Querying '/meta' endpoint... OK
+
