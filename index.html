@@ -140,6 +140,16 @@ tr:hover td{background:#F0F6FF;}
   padding:9px 18px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit;
   transition:box-shadow .2s, transform .15s;}
 .btn:hover{box-shadow:0 3px 10px rgba(0,61,124,.3); transform:translateY(-1px);}
+.mt-input{font:inherit; font-size:14px; padding:8px 10px; border:1px solid var(--line); border-radius:var(--r-sm);
+  background:#fff; color:var(--text); box-sizing:border-box;}
+.mt-input:focus{outline:none; border-color:var(--blue-2); box-shadow:0 0 0 3px var(--blue-soft);}
+textarea.mt-input{resize:vertical; line-height:1.6; font-family:inherit;}
+.mt-item{border:1px solid var(--line); border-radius:var(--r-sm); padding:10px 12px; margin-bottom:8px; background:#fff;}
+.mt-item h4{margin:0 0 4px; font-size:14.5px; color:var(--blue);}
+.mt-item .meta{font-size:12.5px; color:var(--muted); margin-bottom:6px;}
+.mt-body{display:none; border-top:1px dashed var(--line); margin-top:8px; padding-top:8px; font-size:14px; white-space:pre-wrap;}
+.mt-body.open{display:block;}
+.mt-body h5{margin:8px 0 4px; font-size:14px; color:var(--blue-2);}
 
 footer{max-width:1020px; margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:13px;}
 footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90deg,var(--blue),var(--orange)) 1;
@@ -190,6 +200,7 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
   <button class="tab-btn" data-tab="study">学业看板</button>
   <button class="tab-btn" data-tab="courses">选课</button>
   <button class="tab-btn" data-tab="review">周复盘</button>
+  <button class="tab-btn" data-tab="meetings">组会记录</button>
   <button class="tab-btn" data-tab="amm">AMM 调研</button>
   <button class="tab-btn" data-tab="fyp">毕设专项</button>
   <button class="tab-btn" data-tab="papers">文献分析</button>
@@ -468,6 +479,55 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
       <li>加密：期中/期末、毕设节点、申请节点可增至每周 2 次。</li>
       <li>紧急：随时发起。</li>
       <li>方式：本对话 + 工作目录档案文件（本页面为离线可视化版）。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 组会记录 ================= -->
+<section class="tab-panel" id="tab-meetings">
+  <div class="tip">🧑‍🏫 <b>组会记录（本地私密）</b>：本页笔记<b>只保存在本机</b> <code>D:\NUS311RA\组会记录\</code>，<b>不上传公开仓库</b>（工作台本身在公网，但笔记正文只存本地）。提交后若 DSH 会话开着，我会<b>自动收到通知并生成分析</b>。<span id="mt-mode" style="font-weight:600"></span></div>
+
+  <h2 class="sec">✍️ 新增组会笔记</h2>
+  <div class="card">
+    <div class="table-scroll"><table>
+      <tr><th style="width:110px">日期</th><td><input type="date" id="mt-date" class="mt-input" style="max-width:200px"></td></tr>
+      <tr><th>会议主题</th><td><input type="text" id="mt-topic" class="mt-input" style="width:100%" placeholder="例：第一次见面会（导师沟通 + 课题方向确认）"></td></tr>
+      <tr><th>会议内容</th><td><textarea id="mt-content" class="mt-input" rows="9" style="width:100%" placeholder="导师讲的内容、布置的任务、讨论要点、提到的设备/文献……（可分段写，越完整分析越准）"></textarea></td></tr>
+      <tr><th>我的待办</th><td><textarea id="mt-todos" class="mt-input" rows="3" style="width:100%" placeholder="每行一条，例：① 读完官方[1] Science ② 确认微波反应器可用性"></textarea></td></tr>
+      <tr><th>我的疑问</th><td><textarea id="mt-questions" class="mt-input" rows="3" style="width:100%" placeholder="每行一条，例：① 组里硕士升博的先例？ ② Ir 前驱体经费谁出？"></textarea></td></tr>
+    </table></div>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn" id="mt-submit">📤 提交并触发 AI 分析</button>
+      <button class="btn" id="mt-copy" style="background:var(--blue-soft);color:var(--blue)">📋 复制 Markdown</button>
+      <button class="btn" id="mt-download" style="background:var(--blue-soft);color:var(--blue)">💾 下载 .md</button>
+      <span id="mt-status" style="font-size:13px;color:var(--muted)"></span>
+    </div>
+    <div class="note" style="margin-top:10px" id="mt-hint"></div>
+  </div>
+
+  <h2 class="sec">🗂️ 历史组会记录<span style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><a href="#" id="mt-refresh">🔄 刷新</a></span></h2>
+  <div class="card">
+    <div id="mt-list"><div class="note" style="margin:0">正在读取本地记录…</div></div>
+  </div>
+
+  <h2 class="sec">🤖 每次提交后我做什么（分析产出）</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><b>① 要点提炼</b>：导师讲了什么、决定了什么、有哪些没说出口的隐含要求（语气/优先级）。</li>
+      <li><b>② 待办清单</b>：整理成可执行条目，标注优先级与建议截止时间，并同步到「毕设专项」行动清单。</li>
+      <li><b>③ 与课题65 的关联</b>：涉及的方法/设备/文献分别接到毕设时间线的哪一段；影响选课或知识准备的部分单独标出。</li>
+      <li><b>④ 术语·文献白话速查</b>：导师提到的概念、缩写、文献、设备名，一句白话解释 +「要不要精读/要不要下载」判断。</li>
+      <li><b>⑤ 下一步行动 + 下次该问什么</b>：3 条以内具体动作，外加为下次组会准备的提问清单（含这次没问清的）。</li>
+    </ul>
+    <div class="note" style="margin-top:8px">📁 产出位置：分析结果追加写回同一篇笔记的「🤖 AI 分析」小节，并在 <code>组会记录\分析-&lt;日期&gt;-&lt;主题&gt;.md</code> 另存一份完整报告；历史列表里可直接展开阅读。</div>
+  </div>
+
+  <h2 class="sec">⚙️ 触发机制说明</h2>
+  <div class="card">
+    <ul class="plain">
+      <li><b>自动</b>：本机运行 <code>启动在线工作台.bat</code>（含隧道）后提交 → 我在 DSH 会话里挂的监听任务立刻被唤醒，自动开始分析（前提：DSH 会话开着）。</li>
+      <li><b>手动兜底</b>：会话关了或隧道没开时，你提交完只跟我说一句"组会已同步"，我立即读取并处理积压笔记。</li>
+      <li><b>线上（Pages）只读</b>：公网版打不开本地 API，会提示你用 <b>复制 Markdown / 下载 .md</b> 把内容发我；<b>笔记内容不会出现在公网页面</b>。</li>
     </ul>
   </div>
 </section>
@@ -1044,6 +1104,143 @@ document.querySelectorAll('input.task').forEach(function(inp){
   });
   updateGroup(inp.closest('.task-group'));
 });
+
+// ===== 组会记录（本地 API，不上传公网）=====
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var canApi = /^https?:$/.test(location.protocol) && location.hostname !== 'oliver102259.github.io';
+
+  function today(){
+    var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+  }
+  function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(t){
+    return esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+                 .replace(/^### (.*)$/gm,'<h5>$1</h5>')
+                 .replace(/^## (.*)$/gm,'<h5>$1</h5>')
+                 .replace(/^# (.*)$/gm,'<h5>$1</h5>');
+  }
+  function data(){
+    return {
+      date: ($('mt-date').value || '').trim(),
+      topic: ($('mt-topic').value || '').trim(),
+      content: ($('mt-content').value || '').trim(),
+      todos: ($('mt-todos').value || '').trim(),
+      questions: ($('mt-questions').value || '').trim()
+    };
+  }
+  function toMd(d){
+    var out = ['# 组会笔记 · ' + d.date + ' · ' + d.topic, '',
+      '- **日期**：' + d.date, '- **会议主题**：' + d.topic, '- **记录时间**：' + today(), '',
+      '## 一、会议内容', '', d.content || '（未填写）', '', '## 二、我的待办', ''];
+    out.push(d.todos ? d.todos.split('\n').map(function(l){ l=l.trim(); return l ? (l.indexOf('-')===0?l:'- [ ] '+l) : null; }).filter(Boolean).join('\n') : '（未填写）');
+    out.push('', '## 三、我的疑问', '');
+    out.push(d.questions ? d.questions.split('\n').map(function(l){ l=l.trim(); return l ? (l.indexOf('-')===0?l:'- '+l) : null; }).filter(Boolean).join('\n') : '（未填写）');
+    out.push('', '---', '', '## 🤖 AI 分析（DSH 自动生成）', '', '（待生成）');
+    return out.join('\n');
+  }
+  function status(msg, ok){
+    var el = $('mt-status');
+    el.textContent = msg;
+    el.style.color = ok === false ? '#B4232A' : (ok === true ? 'var(--green)' : 'var(--muted)');
+  }
+  function setMode(){
+    var el = $('mt-mode'), hint = $('mt-hint');
+    if (canApi){
+      el.textContent = ' 当前模式：本地/隧道 ✅ 可直接提交';
+      el.style.color = 'var(--green)';
+      hint.innerHTML = '💡 提交后笔记写入 <code>D:\\NUS311RA\\组会记录\\</code>；若 DSH 会话开着，我会自动开始分析（通常 1 分钟内）。';
+      $('mt-submit').disabled = false;
+    } else {
+      el.textContent = ' 当前模式：公网只读（无法写入本机）';
+      el.style.color = 'var(--warn-text)';
+      hint.innerHTML = '💡 你正在公网页面（Pages）上：请用下方的 <b>复制 Markdown</b> 或 <b>下载 .md</b>，把内容发给我；也可回家后双击 <code>启动在线工作台.bat</code> 用隧道网址提交，那样会全自动。';
+      $('mt-submit').disabled = true;
+      $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 历史组会记录仅保存在本机，公网页面不展示（保护组内信息）。请在本地/隧道模式下查看。</div>';
+    }
+  }
+  function render(items){
+    var box = $('mt-list');
+    if (!items || !items.length){ box.innerHTML = '<div class="note" style="margin:0">还没有组会记录——上面填写第一篇（今天第一次见面会）即可 📝</div>'; return; }
+    box.innerHTML = items.map(function(it, i){
+      var badges = [];
+      if (it.has_todos) badges.push('待办');
+      if (it.has_questions) badges.push('疑问');
+      badges.push(it.status === 'done' ? '已分析 ✅' : '待分析 🕓');
+      return '<div class="mt-item"><h4>' + esc(it.date) + ' · ' + esc(it.topic) + '</h4>' +
+        '<div class="meta">记录于 ' + esc(it.created || '') + ' ｜ ' + badges.join(' ｜ ') + '</div>' +
+        '<a href="#" data-open="' + esc(it.file) + '" data-i="' + i + '">展开阅读 ▾</a>' +
+        '<div class="mt-body" id="mt-body-' + i + '"></div></div>';
+    }).join('');
+    box.querySelectorAll('[data-open]').forEach(function(a){
+      a.addEventListener('click', function(ev){
+        ev.preventDefault();
+        var f = a.getAttribute('data-open'), i = a.getAttribute('data-i');
+        var body = document.getElementById('mt-body-' + i);
+        if (body.classList.contains('open')){ body.classList.remove('open'); a.textContent = '展开阅读 ▾'; return; }
+        if (body.dataset.loaded){ body.classList.add('open'); a.textContent = '收起 ▴'; return; }
+        body.textContent = '读取中…'; body.classList.add('open');
+        fetch('/api/note?file=' + encodeURIComponent(f)).then(function(r){ return r.json(); }).then(function(j){
+          if (j && j.ok){ body.innerHTML = fmt(j.text); body.dataset.loaded = '1'; a.textContent = '收起 ▴'; }
+          else { body.textContent = '读取失败：' + ((j && j.error) || '未知错误'); }
+        }).catch(function(e){ body.textContent = '读取失败：' + e; });
+      });
+    });
+  }
+  function load(){
+    if (!canApi) return;
+    fetch('/api/notes').then(function(r){ return r.json(); }).then(function(j){ render(j && j.items); })
+      .catch(function(){ $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 读取本地记录失败：请确认服务器在运行（双击 启动在线工作台.bat）。</div>'; });
+  }
+  function clearBody(){
+    $('mt-topic').value = ''; $('mt-content').value = ''; $('mt-todos').value = ''; $('mt-questions').value = '';
+  }
+
+  $('mt-date').value = today();
+  setMode(); load();
+
+  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); load(); status('已刷新'); });
+  $('mt-copy').addEventListener('click', function(){
+    var d = data();
+    if (!d.topic || !d.content) return status('请先填写会议主题与内容', false);
+    var md = toMd(d);
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(md).then(function(){ status('✅ 已复制，可直接粘贴给我', true); },
+        function(){ status('复制失败，请手动选中下载文件', false); });
+    } else {
+      var ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); status('✅ 已复制', true); } catch(e){ status('复制失败', false); }
+      document.body.removeChild(ta);
+    }
+  });
+  $('mt-download').addEventListener('click', function(){
+    var d = data();
+    if (!d.topic || !d.content) return status('请先填写会议主题与内容', false);
+    var blob = new Blob([toMd(d)], {type:'text/markdown;charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '组会-' + d.date + '-' + d.topic.replace(/[\\/:*?"<>|]/g,'') + '.md';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    status('✅ 已下载，请把文件发给我', true);
+  });
+  $('mt-submit').addEventListener('click', function(){
+    var d = data();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) return status('请填写日期', false);
+    if (!d.topic) return status('请填写会议主题', false);
+    if (!d.content) return status('请填写会议内容', false);
+    status('提交中…');
+    fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(d)})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if (j && j.ok){
+          status('✅ 已保存：' + j.file + '（我这边收到通知后会开始分析，约 1 分钟内）', true);
+          clearBody(); load();
+        } else { status('提交失败：' + ((j && j.error) || '未知错误'), false); }
+      })
+      .catch(function(e){ status('提交失败（服务器未运行？）：' + e, false); });
+  });
+})();
 </script>
 </body>
 </html>
