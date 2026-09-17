@@ -1112,6 +1112,7 @@ document.querySelectorAll('input.task').forEach(function(inp){
   var hostIsPages = location.hostname === 'oliver102259.github.io' || location.protocol === 'file:';
   var canTryApi = /^https?:$/.test(location.protocol) && !hostIsPages;
   var serverOk = false;
+  var tunnelUrl = '';
 
   function today(){
     var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
@@ -1154,23 +1155,35 @@ document.querySelectorAll('input.task').forEach(function(inp){
     b.innerHTML = '<b style="color:' + c + '">' + html + '</b>';
   }
   function applyMode(){
+    var phone = tunnelUrl
+      ? '<br>📱 手机/异地网址：<a href="' + tunnelUrl + '" target="_blank">' + tunnelUrl + '</a>（点此复制备用：' +
+        '<a href="#" id="mt-copytunnel">复制网址</a>）'
+      : '<br>📱 手机网址：本地服务器运行后会自动显示在这里（由 启动在线工作台.bat 生成）';
     if (serverOk){
-      banner('ok', '✅ 已连接本地服务器 —— 提交后会写入本机，并自动触发 AI 分析（我通常 1 分钟内开始）');
+      banner('ok', '✅ 已连接本地服务器 —— 提交后会写入本机，并自动触发 AI 分析（我通常 1 分钟内开始）' + phone);
       $('mt-hint').innerHTML = '💡 笔记写入 <code>D:\\NUS311RA\\组会记录\\</code>；提交成功后下方历史列表会立即出现该条记录。';
+      var ct = $('mt-copytunnel');
+      if (ct) ct.addEventListener('click', function(ev){
+        ev.preventDefault();
+        if (navigator.clipboard) navigator.clipboard.writeText(tunnelUrl);
+        status('✅ 手机网址已复制', true);
+      });
     } else if (canTryApi){
-      banner('warn', '⚠️ 连不上本地服务器（端口 8000 无响应）—— 请双击 <code>启动在线工作台.bat</code> 后刷新本页；也可直接点「📋 复制 Markdown」把内容发我，我立刻处理');
+      banner('warn', '⚠️ 连不上本地服务器（端口 8000 无响应）—— 请双击 <code>启动在线工作台.bat</code>，然后<b>刷新本页</b>；也可直接点「📋 复制 Markdown」把内容发我，我立刻处理');
       $('mt-hint').innerHTML = '💡 常见原因：没双击 <code>启动在线工作台.bat</code>（服务器没起来），或服务器被关掉了。';
       $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 服务器未运行，历史记录暂时读不到（记录本身不会丢，起来后即可看到）。</div>';
     } else {
-      banner('info', '🔒 公网只读模式（Pages 静态页）—— 无法写入本机。请点「📋 复制 Markdown」把内容发我，或改用本地/隧道地址提交');
-      $('mt-hint').innerHTML = '💡 想全自动：在电脑双击 <code>启动在线工作台.bat</code>，记下它打印的 trycloudflare 网址，用该网址打开本页再提交。';
+      banner('info', '🔒 公网只读模式（Pages 静态页）—— 无法写入本机。请点「📋 复制 Markdown」把内容发我，或改用本地/隧道地址提交' + phone);
+      $('mt-hint').innerHTML = '💡 想全自动：在电脑双击 <code>启动在线工作台.bat</code>，它会打印 trycloudflare 网址；用该网址（或本机 http://127.0.0.1:8000）打开本页再提交。';
       $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 历史组会记录仅保存在本机，公网页面不展示（保护组内信息）。</div>';
     }
   }
   function ping(){
     if (!canTryApi){ applyMode(); return; }
     fetch('/api/status').then(function(r){ return r.json(); }).then(function(j){
-      serverOk = !!(j && j.ok); applyMode();
+      serverOk = !!(j && j.ok);
+      if (j && j.tunnel) tunnelUrl = j.tunnel;
+      applyMode();
     }).catch(function(){ serverOk = false; applyMode(); });
   }
   function render(items){
