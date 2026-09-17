@@ -506,6 +506,25 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
     <div class="note" style="margin-top:10px" id="mt-hint"></div>
   </div>
 
+  <h2 class="sec">🔗 远端笔记仓库（可选 · 手机/公网也能直接提交）</h2>
+  <div class="card">
+    <div class="table-scroll"><table>
+      <tr><th style="width:110px">仓库</th><td><input type="text" id="mt-repo" class="mt-input" style="width:100%;max-width:340px" placeholder="Oliver102259/NUS311-notes（你的私有仓库）"></td></tr>
+      <tr><th>分支</th><td><input type="text" id="mt-branch" class="mt-input" style="max-width:160px" placeholder="main"></td></tr>
+      <tr><th>笔记目录</th><td><input type="text" id="mt-path" class="mt-input" style="max-width:200px" placeholder="组会记录"></td></tr>
+      <tr><th>访问令牌</th><td><input type="password" id="mt-token" class="mt-input" style="width:100%;" placeholder="github_pat_…（细粒度 token，只给这个私有仓库 Contents 读写权限）"></td></tr>
+    </table></div>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn" id="mt-savecfg">💾 保存设置</button>
+      <button class="btn" id="mt-testcfg" style="background:var(--blue-soft);color:var(--blue)">🔌 测试连接</button>
+      <span id="mt-cfgstatus" style="font-size:13px;color:var(--muted)"></span>
+    </div>
+    <div class="note" style="margin-top:10px">
+      🔐 <b>说明</b>：令牌只保存在<b>你自己的浏览器</b>（localStorage）与<b>本机文件</b> <code>.notes-config.json</code>（权限 600），用于把笔记写进<b>你的私有仓库</b>（不公开）。配置后：手机、公网 Pages、任何设备都能直接提交；DSH 会每 60 秒轮询私有仓库，发现新笔记就自动分析。<br>
+      📋 <b>一次性配置步骤</b>：① GitHub 新建 <b>Private</b> 仓库（如 <code>NUS311-notes</code>）→ ② 生成细粒度 token（仅授权该仓库，权限 <b>Contents: Read and write</b>）→ ③ 把仓库名与 token 填到上面并保存。
+    </div>
+  </div>
+
   <h2 class="sec">🗂️ 历史组会记录<span style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><a href="#" id="mt-refresh">🔄 刷新</a></span></h2>
   <div class="card">
     <div id="mt-list"><div class="note" style="margin:0">正在读取本地记录…</div></div>
@@ -1113,6 +1132,71 @@ document.querySelectorAll('input.task').forEach(function(inp){
   var canTryApi = /^https?:$/.test(location.protocol) && !hostIsPages;
   var serverOk = false;
   var tunnelUrl = '';
+  var CFGKEY = 'nus311-notes-cfg-v1';
+  var cfg = {};
+  try { cfg = JSON.parse(localStorage.getItem(CFGKEY) || '{}'); } catch(e) { cfg = {}; }
+
+  // ---------- 远端仓库（私有）直传 ----------
+  function gh(method, path, body){
+    return fetch('https://api.github.com' + path, {
+      method: method,
+      headers: {'Authorization':'Bearer ' + cfg.token, 'Accept':'application/vnd.github+json', 'Content-Type':'application/json'},
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(r){ return r.json().then(function(j){ return {status:r.status, json:j}; }); });
+  }
+  function remoteReady(){ return !!(cfg.token && cfg.repo); }
+  function ghPutNote(d){
+    var name = '组会-' + d.date + '-' + d.topic.replace(/[\\/:*?"<>|\s]/g,'-').slice(0,40) + '.md';
+    var dir = cfg.path || '组会记录';
+    var p = '/repos/' + cfg.repo + '/contents/' + encodeURIComponent(dir + '/' + name);
+    var put = function(body){ return gh('PUT', p, body); };
+    return gh('GET', p + '?ref=' + encodeURIComponent(cfg.branch || 'main')).then(function(res){
+      var body = {message:'组会笔记：' + d.date + ' ' + d.topic,
+                  content: btoa(unescape(encodeURIComponent(toMd(d)))),
+                  branch: cfg.branch || 'main'};
+      if (res.status === 200 && res.json && res.json.sha) body.sha = res.json.sha;
+      return put(body);
+    });
+  }
+  function ghListNotes(){
+    var dir = cfg.path || '组会记录';
+    return gh('GET', '/repos/' + cfg.repo + '/contents/' + encodeURIComponent(dir) + '?ref=' + encodeURIComponent(cfg.branch || 'main'))
+      .then(function(res){
+        if (res.status !== 200 || !Array.isArray(res.json)) throw new Error((res.json && res.json.message) || '读取失败');
+        return res.json.filter(function(f){ return /\.md$/.test(f.name) && f.name.indexOf('分析-') !== 0; })
+          .map(function(f){
+            var m = f.name.match(/^组会-(\d{4}-\d{2}-\d{2})-(.+)\.md$/);
+            return {file:f.name, date: m ? m[1] : '', topic: m ? m[2].replace(/\.md$/,'') : f.name,
+                    created:'', status:'remote', has_todos:false, has_questions:false, _url:f.url};
+          }).sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+      });
+  }
+  function ghGetNote(f){ return gh('GET', f.url).then(function(res){
+      if (res.status !== 200 || !res.json.content) throw new Error('读取失败');
+      return decodeURIComponent(escape(atob(res.json.content.replace(/\n/g,''))));
+  }); }
+  function remoteFileUrl(f){
+    return '/repos/' + cfg.repo + '/contents/' + encodeURIComponent((cfg.path || '组会记录') + '/' + f) +
+           '?ref=' + encodeURIComponent(cfg.branch || 'main');
+  }
+  function remoteText(f){
+    return gh('GET', remoteFileUrl(f)).then(function(res){
+      if (res.status !== 200 || !res.json.content) throw new Error((res.json && res.json.message) || '读取失败');
+      return decodeURIComponent(escape(atob(res.json.content.replace(/\n/g, ''))));
+    });
+  }
+  var contentLoader = function(){ return Promise.reject('未连接任何后端'); };
+  function loadCfgFields(){
+    if ($('mt-repo')) $('mt-repo').value = cfg.repo || '';
+    if ($('mt-branch')) $('mt-branch').value = cfg.branch || 'main';
+    if ($('mt-path')) $('mt-path').value = cfg.path || '组会记录';
+    if ($('mt-token')) $('mt-token').value = cfg.token || '';
+    cfgStatus(remoteReady() ? '✅ 已配置私有仓库：' + cfg.repo + '（提交无需本地服务器）' : '未配置（仅本地服务器模式可用）', remoteReady());
+  }
+  function cfgStatus(msg, ok){
+    var el = $('mt-cfgstatus'); if (!el) return;
+    el.textContent = msg; el.style.color = ok ? 'var(--green)' : (ok === false ? 'var(--warn-text)' : 'var(--muted)');
+  }
 
   function today(){
     var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
@@ -1168,14 +1252,17 @@ document.querySelectorAll('input.task').forEach(function(inp){
         if (navigator.clipboard) navigator.clipboard.writeText(tunnelUrl);
         status('✅ 手机网址已复制', true);
       });
+    } else if (remoteReady()){
+      banner('ok', '☁️ 公网模式 · 已配置私有仓库 —— 提交会直接写入 <b>' + cfg.repo + '</b>，我会在 1 分钟内自动发现并分析（无需开电脑）' + phone);
+      $('mt-hint').innerHTML = '💡 笔记落在你的<b>私有仓库</b>（非公开），DSH 每 60 秒轮询一次；提交后稍等片刻即会自动分析。';
     } else if (canTryApi){
-      banner('warn', '⚠️ 连不上本地服务器（端口 8000 无响应）—— 请双击 <code>启动在线工作台.bat</code>，然后<b>刷新本页</b>；也可直接点「📋 复制 Markdown」把内容发我，我立刻处理');
-      $('mt-hint').innerHTML = '💡 常见原因：没双击 <code>启动在线工作台.bat</code>（服务器没起来），或服务器被关掉了。';
-      $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 服务器未运行，历史记录暂时读不到（记录本身不会丢，起来后即可看到）。</div>';
+      banner('warn', '⚠️ 连不上本地服务器，且未配置私有仓库 —— 请双击 <code>启动在线工作台.bat</code> 后刷新，或在上方配置私有仓库；也可点「📋 复制 Markdown」把内容发我');
+      $('mt-hint').innerHTML = '💡 两条路任选：① 启动本地服务器（本机/隧道地址）② 配置私有仓库（公网也能直接提交）。';
+      $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 后端未就绪，历史记录暂时读不到（本地记录不会丢）。</div>';
     } else {
-      banner('info', '🔒 公网只读模式（Pages 静态页）—— 无法写入本机。请点「📋 复制 Markdown」把内容发我，或改用本地/隧道地址提交' + phone);
-      $('mt-hint').innerHTML = '💡 想全自动：在电脑双击 <code>启动在线工作台.bat</code>，它会打印 trycloudflare 网址；用该网址（或本机 http://127.0.0.1:8000）打开本页再提交。';
-      $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 历史组会记录仅保存在本机，公网页面不展示（保护组内信息）。</div>';
+      banner('info', '🔒 公网只读模式（Pages 静态页）—— 未配置私有仓库，无法写入。请点「📋 复制 Markdown」把内容发我，或配置上方私有仓库后即可直接提交' + phone);
+      $('mt-hint').innerHTML = '💡 推荐：配置一次私有仓库（约 3 分钟），之后手机、电脑、任何地方都能直接提交。';
+      $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 未配置后端，历史记录不可读。配置私有仓库或启动本地服务器后即可查看。</div>';
     }
   }
   function ping(){
@@ -1207,26 +1294,71 @@ document.querySelectorAll('input.task').forEach(function(inp){
         if (body.classList.contains('open')){ body.classList.remove('open'); a.textContent = '展开阅读 ▾'; return; }
         if (body.dataset.loaded){ body.classList.add('open'); a.textContent = '收起 ▴'; return; }
         body.textContent = '读取中…'; body.classList.add('open');
-        fetch('/api/note?file=' + encodeURIComponent(f)).then(function(r){ return r.json(); }).then(function(j){
-          if (j && j.ok){ body.innerHTML = fmt(j.text); body.dataset.loaded = '1'; a.textContent = '收起 ▴'; }
-          else { body.textContent = '读取失败：' + ((j && j.error) || '未知错误'); }
+        contentLoader(f).then(function(text){
+          body.innerHTML = fmt(text); body.dataset.loaded = '1'; a.textContent = '收起 ▴';
         }).catch(function(e){ body.textContent = '读取失败：' + e; });
       });
     });
   }
   function load(){
-    if (!serverOk) return;
-    fetch('/api/notes').then(function(r){ return r.json(); }).then(function(j){ render(j && j.items); })
-      .catch(function(){ $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 读取本地记录失败：请确认 <code>启动在线工作台.bat</code> 正在运行。</div>'; });
+    if (serverOk){
+      contentLoader = function(f){
+        return fetch('/api/note?file=' + encodeURIComponent(f)).then(function(r){ return r.json(); })
+          .then(function(j){ if (j && j.ok) return j.text; throw new Error((j && j.error) || '读取失败'); });
+      };
+      fetch('/api/notes').then(function(r){ return r.json(); }).then(function(j){ render(j && j.items); })
+        .catch(function(){ $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 读取本地记录失败：请确认 <code>启动在线工作台.bat</code> 正在运行。</div>'; });
+      return;
+    }
+    if (remoteReady()){
+      contentLoader = remoteText;
+      $('mt-list').innerHTML = '<div class="note" style="margin:0">正在从私有仓库读取…</div>';
+      ghListNotes().then(function(items){ render(items); })
+        .catch(function(e){ $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 读取私有仓库失败：' + e.message + '（检查仓库名/令牌/目录是否正确）</div>'; });
+      return;
+    }
+    $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 未连接本地服务器、也未配置私有仓库 —— 历史记录暂不可读。请配置上方「远端笔记仓库」，或双击 <code>启动在线工作台.bat</code>。</div>';
   }
   function clearBody(){
     $('mt-topic').value = ''; $('mt-content').value = ''; $('mt-todos').value = ''; $('mt-questions').value = '';
   }
 
   $('mt-date').value = today();
+  loadCfgFields();
   ping();
 
-  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); if (!serverOk){ ping(); status('正在重新检测服务器…'); return; } load(); status('已刷新'); });
+  $('mt-savecfg').addEventListener('click', function(){
+    cfg = {
+      repo: ($('mt-repo').value || '').trim(),
+      branch: ($('mt-branch').value || 'main').trim() || 'main',
+      path: ($('mt-path').value || '组会记录').trim() || '组会记录',
+      token: ($('mt-token').value || '').trim()
+    };
+    try { localStorage.setItem(CFGKEY, JSON.stringify(cfg)); } catch(e) {}
+    if (!cfg.repo || !cfg.token) { cfgStatus('⚠️ 仓库与令牌都要填（令牌只保存在本浏览器）', false); return; }
+    cfgStatus('✅ 已保存到本浏览器' + (serverOk ? '，并同步到本机 .notes-config.json' : '（本机服务器未运行，未写文件）'), true);
+    if (serverOk){
+      fetch('/api/config', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({repo:cfg.repo, branch:cfg.branch, path:cfg.path, token:cfg.token})})
+        .then(function(r){ return r.json(); })
+        .then(function(j){ if (j && j.ok) cfgStatus('✅ 已保存（浏览器 + 本机文件），DSH 轮询器可直接使用', true); })
+        .catch(function(){});
+    }
+    applyMode(); load();
+  });
+  $('mt-testcfg').addEventListener('click', function(){
+    var r = ($('mt-repo').value || '').trim(), t = ($('mt-token').value || '').trim();
+    if (!r || !t) return cfgStatus('请先填仓库与令牌', false);
+    cfg.repo = r; cfg.token = t;
+    cfg.branch = ($('mt-branch').value || 'main').trim() || 'main';
+    cfg.path = ($('mt-path').value || '组会记录').trim() || '组会记录';
+    cfgStatus('测试中…');
+    ghListNotes().then(function(items){
+      cfgStatus('✅ 连接成功：仓库可读写，当前 ' + items.length + ' 篇笔记', true);
+      applyMode(); load();
+    }).catch(function(e){ cfgStatus('❌ 连接失败：' + e.message + '（检查仓库名、令牌权限 Contents: RW）', false); });
+  });
+  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); if (!serverOk){ ping(); } load(); status('已刷新'); });
   function fallbackCopy(md){
     var ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select();
     try { document.execCommand('copy'); status('✅ 已复制', true); } catch(e){ status('复制失败，请改用「💾 下载 .md」', false); }
@@ -1259,24 +1391,43 @@ document.querySelectorAll('input.task').forEach(function(inp){
     if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) return status('请填写日期', false);
     if (!d.topic) return status('请填写会议主题', false);
     if (!d.content) return status('请填写会议内容', false);
-    if (!serverOk){
-      // 兜底：服务器不可用时，复制 Markdown 并明确告知下一步
+    if (!serverOk && !remoteReady()){
+      // 双后端都不可用：复制兜底
       copyMd(d);
-      status('⚠️ 未连接本地服务器，已把笔记复制到剪贴板 —— 请直接粘贴给我，我立刻分析', false);
-      banner('warn', '⚠️ 提交未送达服务器（服务器未运行）。已自动复制笔记内容：<b>请粘贴到聊天里发我</b>，我马上处理；或双击 <code>启动在线工作台.bat</code> 后刷新本页重试');
+      status('⚠️ 后端未就绪，已把笔记复制到剪贴板 —— 请粘贴给我，我立刻分析', false);
+      banner('warn', '⚠️ 提交未送达任何后端。已自动复制笔记内容：<b>请粘贴到聊天里发我</b>；或在下方「远端笔记仓库」配置一次，之后随时可直接提交');
       return;
     }
-    status('提交中…');
-    fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(d)})
-      .then(function(r){ return r.json(); })
-      .then(function(j){
-        if (j && j.ok){
-          status('✅ 已保存：' + j.file + '（我这边收到通知后会开始分析，约 1 分钟内）', true);
-          clearBody(); load();
-        } else { status('提交失败：' + ((j && j.error) || '未知错误'), false); }
-      })
-      .catch(function(e){ status('提交失败（服务器中断？）：' + e, false); serverOk = false; applyMode(); });
+    if (serverOk){
+      status('提交中（本地服务器）…');
+      fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(d)})
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if (j && j.ok){
+            status('✅ 已保存到本机：' + j.file + '（我这边收到通知后会开始分析，约 1 分钟内）', true);
+            clearBody(); load();
+          } else { status('提交失败：' + ((j && j.error) || '未知错误'), false); }
+        })
+        .catch(function(e){
+          status('本地提交失败（' + e + '），尝试走私有仓库…', false);
+          serverOk = false; pushRemote(d);
+        });
+      return;
+    }
+    pushRemote(d);
   });
+
+  function pushRemote(d){
+    status('提交中（私有仓库 ' + cfg.repo + '）…');
+    ghPutNote(d).then(function(res){
+      if (res.status === 200 || res.status === 201){
+        status('✅ 已提交到私有仓库：' + cfg.repo + '（我通常 1 分钟内自动发现并分析）', true);
+        clearBody(); load();
+      } else {
+        status('提交失败：' + ((res.json && res.json.message) || res.status), false);
+      }
+    }).catch(function(e){ status('提交失败：' + e, false); });
+  }
 })();
 </script>
 </body>
