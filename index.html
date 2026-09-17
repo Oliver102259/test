@@ -517,6 +517,7 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
     <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
       <button class="btn" id="mt-savecfg">💾 保存设置</button>
       <button class="btn" id="mt-testcfg" style="background:var(--blue-soft);color:var(--blue)">🔌 测试连接</button>
+      <button class="btn" id="mt-diag" style="background:var(--blue-soft);color:var(--blue)">🔎 诊断</button>
       <span id="mt-cfgstatus" style="font-size:13px;color:var(--muted)"></span>
     </div>
     <div class="note" style="margin-top:10px">
@@ -1327,6 +1328,53 @@ document.querySelectorAll('input.task').forEach(function(inp){
   loadCfgFields();
   ping();
 
+  $('mt-diag').addEventListener('click', function(){
+    cfg.repo = ($('mt-repo').value || '').trim();
+    cfg.token = ($('mt-token').value || '').trim();
+    cfg.branch = ($('mt-branch').value || 'main').trim() || 'main';
+    cfg.path = ($('mt-path').value || '组会记录').trim() || '组会记录';
+    if (!cfg.repo || !cfg.token) return cfgStatus('请先填仓库与令牌再诊断', false);
+    var H = {'Authorization':'Bearer ' + cfg.token, 'Accept':'application/vnd.github+json'};
+    var G = function(u){ return fetch('https://api.github.com' + u, {headers:H}).then(function(r){ return r.json().then(function(j){ return {s:r.status, j:j}; }); }); };
+    var log = [];
+    var show = function(){ $('mt-hint').innerHTML = '🔎 <b>诊断结果</b>：<br>' + log.join('<br>'); };
+    log.push('① 令牌：检测中…'); show();
+    G('/user').then(function(a){
+      if (a.s !== 200){ log[0] = '① ❌ 令牌无效/已过期/复制不完整（HTTP ' + a.s + '）→ 重新生成并完整复制（以 github_pat_ 开头）'; show(); return; }
+      log[0] = '① ✅ 令牌有效，属于账号 <b>' + a.j.login + '</b>';
+      log.push('② 仓库可见性：检测中…'); show();
+      return G('/repos/' + cfg.repo).then(function(b){
+        if (b.s === 404){
+          log[1] = '② ❌ 仓库 <code>' + cfg.repo + '</code> 对令牌<b>不可见</b>：名称写错，或该仓库没被授权给这个令牌（最常见：建令牌时 Repository access 留在了默认的 “Public repositories”）';
+          show();
+          return G('/user/repos?per_page=100&affiliation=owner').then(function(c){
+            if (c.s === 200 && Array.isArray(c.j)){
+              log.push('③ 令牌能看到的仓库共 ' + c.j.length + ' 个：<code>' + c.j.map(function(r){ return r.full_name + (r.private ? '(私有)' : ''); }).join('、') + '</code>');
+              log.push('👉 若上面列表里<b>没有</b>你的私有仓库 → 去令牌设置里改 Repository access：Only select repositories → 勾选该仓库，并把 Contents 设为 Read and write，然后重新生成/保存。');
+            }
+            show();
+          });
+        }
+        if (b.s !== 200){ log[1] = '② ❌ 读取仓库失败 HTTP ' + b.s + '：' + (b.j.message || ''); show(); return; }
+        log[1] = '② ✅ 仓库可见：' + (b.j.private ? '<b>私有</b>' : '公开') + '，默认分支 <code>' + b.j.default_branch + '</code>';
+        if (b.j.default_branch !== cfg.branch) log.push('⚠️ 你填的分支是 <code>' + cfg.branch + '</code>，仓库默认分支是 <code>' + b.j.default_branch + '</code> —— 建议改成后者');
+        log.push('③ 内容读写权限：检测中…'); show();
+        return G('/repos/' + cfg.repo + '/contents/?ref=' + encodeURIComponent(b.j.default_branch));
+        }).then(function(d){
+          if (!d) return;
+          if (d.s === 403){
+            log[log.length - 1] = '③ ❌ 无 Contents 读权限（HTTP 403, Resource not accessible）→ 令牌权限里把 <b>Contents 设为 Read and write</b>';
+          } else if (d.s === 200){
+            log[log.length - 1] = '③ ✅ Contents 读取正常（仓库根目录 ' + (Array.isArray(d.j) ? d.j.length : 0) + ' 项）';
+            log.push('④ 结论：配置正确 ✅ 现在可以直接提交；若写入失败再单看写权限');
+          } else {
+            log[log.length - 1] = '③ ❌ 读取内容失败 HTTP ' + d.s + '：' + (d.j && d.j.message || '');
+          }
+          show();
+        });
+      });
+    }).catch(function(e){ log.push('❌ 诊断中断：' + e.message); show(); });
+  });
   $('mt-savecfg').addEventListener('click', function(){
     cfg = {
       repo: ($('mt-repo').value || '').trim(),
