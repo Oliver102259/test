@@ -543,6 +543,18 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
     <div class="note" style="margin-top:8px">📁 产出位置：分析结果追加写回同一篇笔记的「🤖 AI 分析」小节，并在 <code>组会记录\分析-&lt;日期&gt;-&lt;主题&gt;.md</code> 另存一份完整报告；历史列表里可直接展开阅读。</div>
   </div>
 
+  <h2 class="sec">⏰ 自动分析排班（每周四）<span style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><a href="#" id="mt-sched-refresh">🔄 刷新</a></span></h2>
+  <div class="card">
+    <div class="table-scroll"><table>
+      <tr><th style="width:130px">规则</th><td><b>每周四 18:00</b> 自动启动 → 之后<b>每 30 分钟</b>检查一次（私有仓库 + 本地记录）→ <b>一旦发现新的会议记录就停止查询</b>，立即执行分析并把结果回传仓库（笔记内嵌 + 独立分析报告）</td></tr>
+      <tr><th>为什么是周四 18:00</th><td>组会为每周四 16:00，18:00 时记录通常已上传完毕</td></tr>
+      <tr><th>当前状态</th><td id="mt-sched-state">正在读取…</td></tr>
+      <tr><th>下次运行</th><td id="mt-sched-next">—</td></tr>
+      <tr><th>上次检查</th><td id="mt-sched-last">—</td></tr>
+    </table></div>
+    <div class="note" style="margin-top:8px">💡 非周四提交的记录也<b>不会被漏掉</b>：监听器（15 秒）与轮询器（60 秒）始终在线，随时接住任意时间的提交；本定时任务只是保证"周四晚必查一次并汇总分析"。若 DSH 会话当时关闭，记录仍会保存，下次会话我会自动补处理。</div>
+  </div>
+
   <h2 class="sec">⚙️ 触发机制说明</h2>
   <div class="card">
     <ul class="plain">
@@ -1388,9 +1400,23 @@ document.querySelectorAll('input.task').forEach(function(inp){
     $('mt-topic').value = ''; $('mt-content').value = ''; $('mt-todos').value = ''; $('mt-questions').value = '';
   }
 
+  function loadSchedule(){
+    var el = $('mt-sched-state');
+    if (!el) return;
+    if (!canTryApi){ el.textContent = '（本地服务器未连接，排班状态需在本地/隧道模式查看）'; return; }
+    fetch('/api/schedule').then(function(r){ return r.json(); }).then(function(j){
+      var s = (j && j.schedule) || {};
+      var phase = {'waiting':'🕓 等待下一个周四 18:00','polling':'🔍 正在轮询（每 30 分钟）','triggered':'✅ 已检出记录，正在分析','done-this-week':'✅ 本周已完成分析'}[s.phase] || s.phase || '未启动';
+      el.innerHTML = '<b>' + phase + '</b>' + (s.note ? ' ｜ ' + s.note : '') + (s.found ? ' ｜ 记录：<code>' + s.found + '</code>' : '');
+      $('mt-sched-next').textContent = s.next_check || s.target || '—';
+      $('mt-sched-last').textContent = s.last_check || '（尚未检查）';
+    }).catch(function(){ el.textContent = '读取失败（服务器未运行）'; });
+  }
+
   $('mt-date').value = today();
   loadCfgFields();
   ping();
+  loadSchedule();
 
   function ghRaw(u){
     return fetch('https://api.github.com' + u, {headers:{'Authorization':'Bearer ' + cfg.token, 'Accept':'application/vnd.github+json'}})
@@ -1482,7 +1508,9 @@ document.querySelectorAll('input.task').forEach(function(inp){
       applyMode(); load();
     }).catch(function(e){ cfgStatus('❌ 连接失败：' + e.message + '（检查仓库名、令牌权限 Contents: RW）', false); });
   });
-  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); if (!serverOk){ ping(); } load(); status('已刷新'); });
+  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); if (!serverOk){ ping(); } load(); loadSchedule(); status('已刷新'); });
+  var sr = $('mt-sched-refresh');
+  if (sr) sr.addEventListener('click', function(ev){ ev.preventDefault(); loadSchedule(); });
   function fallbackCopy(md){
     var ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select();
     try { document.execCommand('copy'); status('✅ 已复制', true); } catch(e){ status('复制失败，请改用「💾 下载 .md」', false); }
