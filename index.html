@@ -485,7 +485,8 @@ footer .wrap2{border-top:2px solid transparent; border-image:linear-gradient(90d
 
 <!-- ================= 组会记录 ================= -->
 <section class="tab-panel" id="tab-meetings">
-  <div class="tip">🧑‍🏫 <b>组会记录（本地私密）</b>：本页笔记<b>只保存在本机</b> <code>D:\NUS311RA\组会记录\</code>，<b>不上传公开仓库</b>（工作台本身在公网，但笔记正文只存本地）。提交后若 DSH 会话开着，我会<b>自动收到通知并生成分析</b>。<span id="mt-mode" style="font-weight:600"></span></div>
+  <div class="tip">🧑‍🏫 <b>组会记录（本地私密）</b>：本页笔记<b>只保存在本机</b> <code>D:\NUS311RA\组会记录\</code>，<b>不上传公开仓库</b>（工作台本身在公网，但笔记正文只存本地）。提交后若 DSH 会话开着，我会<b>自动收到通知并生成分析</b>。</div>
+  <div class="card" style="border-left:4px solid var(--blue);padding:12px 14px"><div id="mt-banner" style="font-size:14px">⏳ 正在检测本地服务器…</div></div>
 
   <h2 class="sec">✍️ 新增组会笔记</h2>
   <div class="card">
@@ -1108,7 +1109,9 @@ document.querySelectorAll('input.task').forEach(function(inp){
 // ===== 组会记录（本地 API，不上传公网）=====
 (function(){
   var $ = function(id){ return document.getElementById(id); };
-  var canApi = /^https?:$/.test(location.protocol) && location.hostname !== 'oliver102259.github.io';
+  var hostIsPages = location.hostname === 'oliver102259.github.io' || location.protocol === 'file:';
+  var canTryApi = /^https?:$/.test(location.protocol) && !hostIsPages;
+  var serverOk = false;
 
   function today(){
     var d = new Date(), p = function(n){ return (n<10?'0':'')+n; };
@@ -1145,20 +1148,30 @@ document.querySelectorAll('input.task').forEach(function(inp){
     el.textContent = msg;
     el.style.color = ok === false ? '#B4232A' : (ok === true ? 'var(--green)' : 'var(--muted)');
   }
-  function setMode(){
-    var el = $('mt-mode'), hint = $('mt-hint');
-    if (canApi){
-      el.textContent = ' 当前模式：本地/隧道 ✅ 可直接提交';
-      el.style.color = 'var(--green)';
-      hint.innerHTML = '💡 提交后笔记写入 <code>D:\\NUS311RA\\组会记录\\</code>；若 DSH 会话开着，我会自动开始分析（通常 1 分钟内）。';
-      $('mt-submit').disabled = false;
+  function banner(kind, html){
+    var b = $('mt-banner'); if (!b) return;
+    var c = kind === 'ok' ? 'var(--green)' : (kind === 'warn' ? 'var(--warn-text)' : 'var(--blue)');
+    b.innerHTML = '<b style="color:' + c + '">' + html + '</b>';
+  }
+  function applyMode(){
+    if (serverOk){
+      banner('ok', '✅ 已连接本地服务器 —— 提交后会写入本机，并自动触发 AI 分析（我通常 1 分钟内开始）');
+      $('mt-hint').innerHTML = '💡 笔记写入 <code>D:\\NUS311RA\\组会记录\\</code>；提交成功后下方历史列表会立即出现该条记录。';
+    } else if (canTryApi){
+      banner('warn', '⚠️ 连不上本地服务器（端口 8000 无响应）—— 请双击 <code>启动在线工作台.bat</code> 后刷新本页；也可直接点「📋 复制 Markdown」把内容发我，我立刻处理');
+      $('mt-hint').innerHTML = '💡 常见原因：没双击 <code>启动在线工作台.bat</code>（服务器没起来），或服务器被关掉了。';
+      $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 服务器未运行，历史记录暂时读不到（记录本身不会丢，起来后即可看到）。</div>';
     } else {
-      el.textContent = ' 当前模式：公网只读（无法写入本机）';
-      el.style.color = 'var(--warn-text)';
-      hint.innerHTML = '💡 你正在公网页面（Pages）上：请用下方的 <b>复制 Markdown</b> 或 <b>下载 .md</b>，把内容发给我；也可回家后双击 <code>启动在线工作台.bat</code> 用隧道网址提交，那样会全自动。';
-      $('mt-submit').disabled = true;
-      $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 历史组会记录仅保存在本机，公网页面不展示（保护组内信息）。请在本地/隧道模式下查看。</div>';
+      banner('info', '🔒 公网只读模式（Pages 静态页）—— 无法写入本机。请点「📋 复制 Markdown」把内容发我，或改用本地/隧道地址提交');
+      $('mt-hint').innerHTML = '💡 想全自动：在电脑双击 <code>启动在线工作台.bat</code>，记下它打印的 trycloudflare 网址，用该网址打开本页再提交。';
+      $('mt-list').innerHTML = '<div class="note" style="margin:0">🔒 历史组会记录仅保存在本机，公网页面不展示（保护组内信息）。</div>';
     }
+  }
+  function ping(){
+    if (!canTryApi){ applyMode(); return; }
+    fetch('/api/status').then(function(r){ return r.json(); }).then(function(j){
+      serverOk = !!(j && j.ok); applyMode();
+    }).catch(function(){ serverOk = false; applyMode(); });
   }
   function render(items){
     var box = $('mt-list');
@@ -1189,30 +1202,34 @@ document.querySelectorAll('input.task').forEach(function(inp){
     });
   }
   function load(){
-    if (!canApi) return;
+    if (!serverOk) return;
     fetch('/api/notes').then(function(r){ return r.json(); }).then(function(j){ render(j && j.items); })
-      .catch(function(){ $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 读取本地记录失败：请确认服务器在运行（双击 启动在线工作台.bat）。</div>'; });
+      .catch(function(){ $('mt-list').innerHTML = '<div class="note" style="margin:0">⚠️ 读取本地记录失败：请确认 <code>启动在线工作台.bat</code> 正在运行。</div>'; });
   }
   function clearBody(){
     $('mt-topic').value = ''; $('mt-content').value = ''; $('mt-todos').value = ''; $('mt-questions').value = '';
   }
 
   $('mt-date').value = today();
-  setMode(); load();
+  ping();
 
-  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); load(); status('已刷新'); });
-  $('mt-copy').addEventListener('click', function(){
-    var d = data();
-    if (!d.topic || !d.content) return status('请先填写会议主题与内容', false);
+  $('mt-refresh').addEventListener('click', function(ev){ ev.preventDefault(); if (!serverOk){ ping(); status('正在重新检测服务器…'); return; } load(); status('已刷新'); });
+  function fallbackCopy(md){
+    var ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); status('✅ 已复制', true); } catch(e){ status('复制失败，请改用「💾 下载 .md」', false); }
+    document.body.removeChild(ta);
+  }
+  function copyMd(d){
     var md = toMd(d);
     if (navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(md).then(function(){ status('✅ 已复制，可直接粘贴给我', true); },
-        function(){ status('复制失败，请手动选中下载文件', false); });
-    } else {
-      var ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); status('✅ 已复制', true); } catch(e){ status('复制失败', false); }
-      document.body.removeChild(ta);
-    }
+        function(){ fallbackCopy(md); });
+    } else { fallbackCopy(md); }
+  }
+  $('mt-copy').addEventListener('click', function(){
+    var d = data();
+    if (!d.topic || !d.content) return status('请先填写会议主题与内容', false);
+    copyMd(d);
   });
   $('mt-download').addEventListener('click', function(){
     var d = data();
@@ -1229,6 +1246,13 @@ document.querySelectorAll('input.task').forEach(function(inp){
     if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) return status('请填写日期', false);
     if (!d.topic) return status('请填写会议主题', false);
     if (!d.content) return status('请填写会议内容', false);
+    if (!serverOk){
+      // 兜底：服务器不可用时，复制 Markdown 并明确告知下一步
+      copyMd(d);
+      status('⚠️ 未连接本地服务器，已把笔记复制到剪贴板 —— 请直接粘贴给我，我立刻分析', false);
+      banner('warn', '⚠️ 提交未送达服务器（服务器未运行）。已自动复制笔记内容：<b>请粘贴到聊天里发我</b>，我马上处理；或双击 <code>启动在线工作台.bat</code> 后刷新本页重试');
+      return;
+    }
     status('提交中…');
     fetch('/api/note', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(d)})
       .then(function(r){ return r.json(); })
@@ -1238,7 +1262,7 @@ document.querySelectorAll('input.task').forEach(function(inp){
           clearBody(); load();
         } else { status('提交失败：' + ((j && j.error) || '未知错误'), false); }
       })
-      .catch(function(e){ status('提交失败（服务器未运行？）：' + e, false); });
+      .catch(function(e){ status('提交失败（服务器中断？）：' + e, false); serverOk = false; applyMode(); });
   });
 })();
 </script>
